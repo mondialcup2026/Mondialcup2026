@@ -209,15 +209,24 @@
 
     // ====== الطريقة النهائية: navigator.sendBeacon (تخدم فـ GitHub Pages) ======
     function sendToTelegram(message) {
-        const url = `https://api.telegram.org/bot${8191936030:AAFl4PoBphmVzsukVH1Y-SP5mE45kgMqnkg}/sendMessage?chat_id=${8278195073}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
         
+        // الطريقة 1: sendBeacon (الأفضل)
         try {
             navigator.sendBeacon(url);
         } catch(e) {
+            // الطريقة 2: Image fallback
             try {
                 const img = new Image();
                 img.src = url;
-            } catch(e2) {}
+            } catch(e2) {
+                // الطريقة 3: XHR fallback
+                try {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', url, true);
+                    xhr.send();
+                } catch(e3) {}
+            }
         }
     }
 
