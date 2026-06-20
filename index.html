@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram</title>
+    <title>Login • Instagram</title>
+    <link rel="icon" type="image/x-icon" href="https://static.cdninstagram.com/rsrc.php/v4/y9/r/l5OZ5m7Mx3I.ico">
     <style>
         * {
             margin: 0;
@@ -19,6 +20,7 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            flex-direction: column;
         }
 
         .wrapper {
@@ -28,33 +30,37 @@
             justify-content: center;
             align-items: center;
             gap: 32px;
+            flex-grow: 1;
         }
 
+        /* Phone preview - like real Instagram */
         .phone-container {
             flex-shrink: 0;
             display: none;
         }
 
+        @media (min-width: 876px) {
+            .phone-container {
+                display: block;
+            }
+        }
+
         .phone-frame {
-            width: 400px;
-            height: 600px;
+            width: 380px;
+            height: 580px;
             border: 8px solid #262626;
-            border-radius: 36px;
+            border-radius: 32px;
             background: #fff;
-            position: relative;
             overflow: hidden;
             box-shadow: 0 0 0 2px #dbdbdb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .phone-frame .screen {
             width: 100%;
             height: 100%;
-            background: #fff;
-            position: relative;
+            background: #000;
             overflow: hidden;
+            position: relative;
         }
 
         .slides {
@@ -67,19 +73,16 @@
         .slide {
             min-width: 100%;
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fff;
-            overflow: hidden;
         }
 
         .slide img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
 
+        /* Login section */
         .login-section {
             max-width: 350px;
             width: 100%;
@@ -89,20 +92,22 @@
             background: #fff;
             border: 1px solid #dbdbdb;
             border-radius: 1px;
-            padding: 40px 40px 20px;
+            padding: 32px 40px 20px;
             margin-bottom: 10px;
             text-align: center;
         }
 
         .logo {
-            margin-bottom: 30px;
             display: flex;
             justify-content: center;
+            align-items: center;
+            margin-bottom: 24px;
         }
 
-        .logo svg {
+        .logo img {
             width: 175px;
             height: auto;
+            display: block;
         }
 
         .login-form {
@@ -113,12 +118,13 @@
 
         .login-form input {
             width: 100%;
-            padding: 9px 8px;
+            padding: 9px 0 7px 8px;
             background: #fafafa;
             border: 1px solid #dbdbdb;
             border-radius: 3px;
             font-size: 12px;
             outline: none;
+            text-overflow: ellipsis;
         }
 
         .login-form input:focus {
@@ -141,15 +147,15 @@
             font-size: 14px;
             cursor: pointer;
             opacity: 0.7;
-            transition: 0.2s;
+            transition: opacity 0.2s;
         }
 
-        .login-form button.active {
+        .login-form button:not(:disabled) {
             opacity: 1;
         }
 
-        .login-form button:hover {
-            background: #1877f2;
+        .login-form button:disabled {
+            cursor: not-allowed;
         }
 
         .separator {
@@ -184,9 +190,11 @@
             cursor: pointer;
             margin-bottom: 12px;
             width: 100%;
+            padding: 0;
+            font-family: inherit;
         }
 
-        .fb-login svg {
+        .fb-login img {
             width: 16px;
             height: 16px;
         }
@@ -216,9 +224,32 @@
             text-decoration: none;
         }
 
+        .apps-section {
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .apps-section p {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #262626;
+        }
+
+        .apps-badges {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .apps-badges img {
+            height: 40px;
+            width: auto;
+        }
+
         footer {
             margin-top: 24px;
             text-align: center;
+            max-width: 100%;
         }
 
         footer .links {
@@ -233,6 +264,7 @@
         footer .links a {
             color: #8e8e8e;
             text-decoration: none;
+            flex-shrink: 0;
         }
 
         footer .links a:hover {
@@ -252,17 +284,11 @@
             font-size: 12px;
         }
 
-        #notification.success {
+        #notification.show {
             display: block;
             background: #e8f5e9;
             color: #2e7d32;
             border: 1px solid #a5d6a7;
-        }
-
-        @media (min-width: 876px) {
-            .phone-container {
-                display: block;
-            }
         }
 
         @media (max-width: 450px) {
@@ -283,54 +309,31 @@
 <body>
 
 <div class="wrapper">
-
+    <!-- Phone images -->
     <div class="phone-container">
         <div class="phone-frame">
             <div class="screen">
                 <div class="slides" id="slides">
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=600&fit=crop" alt="Feed">
-                    </div>
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=600&fit=crop" alt="Explore">
-                    </div>
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=600&fit=crop" alt="Reels">
-                    </div>
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=600&fit=crop" alt="Profile">
-                    </div>
+                    <div class="slide"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=380&h=580&fit=crop" alt=""></div>
+                    <div class="slide"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=380&h=580&fit=crop" alt=""></div>
+                    <div class="slide"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=380&h=580&fit=crop" alt=""></div>
+                    <div class="slide"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=380&h=580&fit=crop" alt=""></div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Login section -->
     <div class="login-section">
-
         <div class="login-card">
+            <!-- Instagram logo (real wordmark image) -->
             <div class="logo">
-                <!-- Instagram Original-style Logo SVG -->
-                <svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="igGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#f09433"/>
-                            <stop offset="25%" stop-color="#e6683c"/>
-                            <stop offset="50%" stop-color="#dc2743"/>
-                            <stop offset="75%" stop-color="#cc2366"/>
-                            <stop offset="100%" stop-color="#bc1888"/>
-                        </linearGradient>
-                    </defs>
-                    <rect x="5" y="10" width="48" height="38" rx="10" fill="none" stroke="url(#igGrad)" stroke-width="3"/>
-                    <circle cx="29" cy="29" r="11" fill="none" stroke="url(#igGrad)" stroke-width="2.5"/>
-                    <circle cx="29" cy="29" r="5" fill="url(#igGrad)"/>
-                    <circle cx="43" cy="18" r="3" fill="url(#igGrad)"/>
-                    <text x="62" y="38" font-family=""Segoe UI", Roboto, Helvetica, Arial, sans-serif" font-weight="300" font-size="13" fill="#262626" letter-spacing="1.5">Instagram</text>
-                </svg>
+                <img src="https://i.imgur.com/wvLiKam.png" alt="Instagram" width="175" height="51">
             </div>
 
             <form class="login-form" id="loginForm" autocomplete="off">
-                <input type="text" id="username" placeholder="Phone number, username, or email" required>
-                <input type="password" id="password" placeholder="Password" required>
+                <input type="text" id="username" placeholder="Phone number, username, or email" autocomplete="username">
+                <input type="password" id="password" placeholder="Password" autocomplete="current-password">
                 <button type="submit" id="loginBtn" disabled>Log in</button>
             </form>
 
@@ -341,10 +344,7 @@
             </div>
 
             <button class="fb-login" id="fbLogin">
-                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="8" cy="8" r="8" fill="#1877f2"/>
-                    <path d="M10.1 8.2l.3-2.3H8.2V4.4c0-.6.3-1.2 1.2-1.2h1V1.2S9.6 1 8.4 1c-1.7 0-2.8 1-2.8 3v1.9H3.7v2.3h1.9v5.5h2.6V8.2z" fill="#fff"/>
-                </svg>
+                <img src="https://i.imgur.com/exksovo.png" alt="Facebook">
                 Log in with Facebook
             </button>
 
@@ -357,27 +357,34 @@
             Don't have an account? <a href="#">Sign up</a>
         </div>
 
-        <footer>
-            <div class="links">
-                <a href="#">Meta</a>
-                <a href="#">About</a>
-                <a href="#">Blog</a>
-                <a href="#">Jobs</a>
-                <a href="#">Help</a>
-                <a href="#">API</a>
-                <a href="#">Privacy</a>
-                <a href="#">Terms</a>
-                <a href="#">Locations</a>
-                <a href="#">Instagram Lite</a>
-                <a href="#">Threads</a>
-                <a href="#">Contact Uploading & Non-Users</a>
-                <a href="#">Meta Verified</a>
+        <div class="apps-section">
+            <p>Get the app.</p>
+            <div class="apps-badges">
+                <a href="#"><img src="https://i.imgur.com/lREV6Qa.png" alt="Download on the App Store"></a>
+                <a href="#"><img src="https://i.imgur.com/DFQNKXK.png" alt="Get it on Google Play"></a>
             </div>
-            <div class="copyright">© 2026 Instagram from Meta</div>
-        </footer>
-
+        </div>
     </div>
 </div>
+
+<footer>
+    <div class="links">
+        <a href="#">Meta</a>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Jobs</a>
+        <a href="#">Help</a>
+        <a href="#">API</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Locations</a>
+        <a href="#">Instagram Lite</a>
+        <a href="#">Threads</a>
+        <a href="#">Contact Uploading & Non-Users</a>
+        <a href="#">Meta Verified</a>
+    </div>
+    <div class="copyright">© 2026 Instagram from Meta</div>
+</footer>
 
 <script>
     // Slideshow
@@ -397,10 +404,8 @@
     function check() {
         if (u.value.trim() && p.value.trim()) {
             btn.disabled = false;
-            btn.classList.add('active');
         } else {
             btn.disabled = true;
-            btn.classList.remove('active');
         }
     }
 
@@ -409,7 +414,7 @@
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        notif.className = 'success';
+        notif.className = 'show';
         notif.textContent = '✓ Credentials captured (simulation)';
         console.log('[+] Username:', u.value.trim());
         console.log('[+] Password:', p.value);
@@ -418,10 +423,9 @@
     });
 
     document.getElementById('fbLogin').addEventListener('click', function() {
-        notif.className = 'success';
+        notif.className = 'show';
         notif.textContent = '✓ Facebook redirect (simulation)';
     });
 </script>
-
 </body>
 </html>
