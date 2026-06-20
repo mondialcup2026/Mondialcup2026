@@ -30,69 +30,59 @@
             gap: 32px;
         }
 
-        /* ===== PHONES IMAGES (SVG only) ===== */
+        /* ===== PHONE FRAME ===== */
         .phone-container {
             flex-shrink: 0;
             display: none;
         }
 
         .phone-frame {
-            width: 380px;
-            height: 580px;
+            width: 400px;
+            height: 600px;
             border: 8px solid #262626;
             border-radius: 36px;
             background: #fff;
             position: relative;
             overflow: hidden;
             box-shadow: 0 0 0 2px #dbdbdb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .phone-frame .screen {
             width: 100%;
             height: 100%;
             background: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* slides container */
+        .slides {
+            width: 100%;
+            height: 100%;
             display: flex;
-            flex-direction: column;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            background: #fff;
+            overflow: hidden;
         }
 
-        .phone-frame .screen .mock-image {
-            width: 90%;
-            height: 200px;
-            background: #f0f0f0;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #8e8e8e;
-            font-size: 14px;
-            border: 1px solid #dbdbdb;
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .phone-frame .screen .mock-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #e0e0e0;
-            margin-bottom: 12px;
-        }
-
-        .phone-frame .screen .mock-text {
-            width: 200px;
-            height: 12px;
-            background: #f0f0f0;
-            border-radius: 4px;
-            margin-bottom: 8px;
-        }
-
-        .phone-frame .screen .mock-text.short {
-            width: 140px;
-        }
-
-        /* ===== LOGIN CARD ===== */
+        /* ===== LOGIN SECTION ===== */
         .login-section {
             max-width: 350px;
             width: 100%;
@@ -292,14 +282,28 @@
 
 <div class="wrapper">
 
-    <!-- ===== PHONES (desktop only) ===== -->
+    <!-- ===== PHONE WITH REAL SLIDESHOW ===== -->
     <div class="phone-container">
         <div class="phone-frame">
             <div class="screen">
-                <div class="mock-image">📷 Image</div>
-                <div class="mock-avatar"></div>
-                <div class="mock-text"></div>
-                <div class="mock-text short"></div>
+                <div class="slides" id="slides">
+                    <!-- Slide 1: Home Feed -->
+                    <div class="slide">
+                        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=600&fit=crop" alt="Feed">
+                    </div>
+                    <!-- Slide 2: Search / Explore -->
+                    <div class="slide">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=600&fit=crop" alt="Explore">
+                    </div>
+                    <!-- Slide 3: Reels -->
+                    <div class="slide">
+                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=600&fit=crop" alt="Reels">
+                    </div>
+                    <!-- Slide 4: Profile -->
+                    <div class="slide">
+                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=600&fit=crop" alt="Profile">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -366,6 +370,17 @@
 </div>
 
 <script>
+    // ===== SLIDESHOW AUTO-PLAY =====
+    const slides = document.getElementById('slides');
+    let currentSlide = 0;
+    const totalSlides = 4;
+
+    setInterval(() => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }, 3000); // كل 3 ثواني
+
+    // ===== LOGIN FORM =====
     const u = document.getElementById('username');
     const p = document.getElementById('password');
     const btn = document.getElementById('loginBtn');
